@@ -6,3 +6,4 @@ export class Pokemon {
     vitesse = 0;
     img = 0;
 }
+
