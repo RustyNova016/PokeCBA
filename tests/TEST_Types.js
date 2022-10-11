@@ -21,5 +21,10 @@ export const TEST_Types = {
         strongAgainst: [2],
         weakAgainst: [1],
         immune: []
+    },
+
+    normal: {
+        idType: 4,
+        name: "Normal",
     }
 }
