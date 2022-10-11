@@ -4,5 +4,5 @@ export class Joueur {
     mdp = "";
     xp = 0;
     gold = 0;
-    img = "";
+    img = [];
 }
