@@ -1,6 +1,6 @@
 export const TEST_Types = {
     fire: {
-        id: 1,
+        idType: 1,
         name: "fire",
         strongAgainst: [3],
         weakAgainst: [2],
@@ -8,7 +8,7 @@ export const TEST_Types = {
     },
 
     water: {
-        id: 2,
+        idType: 2,
         name: "water",
         strongAgainst: [1],
         weakAgainst: [3],
@@ -16,10 +16,15 @@ export const TEST_Types = {
     },
 
     plant: {
-        id: 3,
+        idType: 3,
         name: "plant",
         strongAgainst: [2],
         weakAgainst: [1],
         immune: []
+    },
+
+    normal: {
+        idType: 4,
+        name: "Normal",
     }
 }
