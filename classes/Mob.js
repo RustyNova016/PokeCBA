@@ -8,6 +8,8 @@ export class Mob {
     capacities;
     HP;
     XP;
+    /** Item held */
+    id_item;
 
 
     constructor(id_model, nickname, attack, defence, speed, img, capacities, HP, XP) {
