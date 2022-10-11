@@ -1,3 +1,6 @@
+import {Ability} from "./Abilities";
+import {Type} from "./Type";
+
 export class Mob_Model {
     id_mob_model;
     name;
@@ -20,6 +23,25 @@ export class Mob_Model {
         this.img = img;
         this.capacities = capacities;
         this.types;
+    }
+
+    /** Create a mob model object from JSON
+     *
+     * @param json
+     */
+    static fromJson(json) {Ability.fromJson();
+        const abilities = [];
+        const types = [];
+
+        for (const ability of json.abilities) {
+            abilities.push(Ability.fromJson(ability))
+        }
+
+        for (const type of json.types) {
+            types.push(Type.fromJson(type))
+        }
+
+        return new Mob_Model(json.id_mob_model, json.name, json.attack, json.defense, json.speed, json.isShiny, json.img, abilities, types)
     }
 }
 

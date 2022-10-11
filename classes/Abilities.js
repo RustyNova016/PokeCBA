@@ -1,4 +1,4 @@
-export class Abilities {
+export class Ability {
     name;
     power;
     specialEffect;
@@ -12,5 +12,13 @@ export class Abilities {
         this.specialEffect = specialEffect;
         this.priority = priority;
         this.type = type;
+    }
+
+    /** Create an ability object from json
+     *
+     * @param json
+     */
+    static fromJson(json) {
+        return new Ability(json.name, json.power, json.specialEffect, json.priority, json.type);
     }
 }
