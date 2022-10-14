@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "expo": "^46.0.0",
+    "expo": "^46.0.16",
     "next": "9.3.5",
     "react": "18.0.0",
     "react-dom": "18.0.0",
