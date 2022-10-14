@@ -1,4 +1,6 @@
-export class Type {
+import {ElementType} from "./ElementType";
+
+export class ElementType {
     /** Type of the mob/attacks
      *
      * @param {DB_ID} idType
@@ -6,7 +8,7 @@ export class Type {
      * @param {DB_ID[]} strongAgainst
      * @param {DB_ID[]} weakAgainst
      * @param {DB_ID[]} immune
-     * @param {TypeCollection} typeCollection
+     * @param {ElementTypeCollection} typeCollection
      */
     constructor(idType, name, strongAgainst, weakAgainst, immune, typeCollection) {
         this.idType = idType;

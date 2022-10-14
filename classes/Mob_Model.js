@@ -1,5 +1,5 @@
 import {Ability} from "./Abilities";
-import {Type} from "./Type";
+import {ElementType} from "./ElementType";
 
 export class Mob_Model {
     id_mob_model;
@@ -38,7 +38,7 @@ export class Mob_Model {
         }
 
         for (const type of json.types) {
-            types.push(Type.fromJson(type))
+            types.push(ElementType.fromJson(type))
         }
 
         return new Mob_Model(json.id_mob_model, json.name, json.attack, json.defense, json.speed, json.isShiny, json.img, abilities, types)
