@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Text, Animated, View, StyleSheet, Image } from "react-native";
 
 export default function victoire() {
-  const [imgVICTOIRE] = useState(require("../../images/imgVICTOIRE.png"));
+  const [imgVictoire] = useState(require("../../images/imgVictoire.png"));
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export default function victoire() {
         }}
       >
         <View>
-          <Image style={styles.img} source={imgVICTOIRE} />
+          <Image style={styles.img} source={imgVictoire} />
           <Text style={styles.text}>VICTOIRE :)</Text>
         </View>
       </Animated.View>

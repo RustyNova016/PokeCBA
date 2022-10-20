@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Text, Animated, View, StyleSheet, Image } from "react-native";
 
 export default function defaite() {
-  const [imgDEFAITE] = useState(require("../../images/imgDEFAITE.png"));
+  const [imgDefeat] = useState(require("../../images/imgDefeat.png"));
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export default function defaite() {
         }}
       >
         <View>
-          <Image style={styles.img} source={imgDEFAITE} />
+          <Image style={styles.img} source={imgDefeat} />
           <Text style={styles.text}>DEFAITE :(</Text>
         </View>
       </Animated.View>

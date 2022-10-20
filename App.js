@@ -1,18 +1,18 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
-import combatSysteme from "./vue/game/combatSysteme";
+import fightSystem from "./vue/game/fightSystem";
 import victoire from "./vue/game/victoire";
-import defaite from "./vue/game/defaite";
+import defeat from "./vue/game/defeat";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="combatSysteme">
+      <Stack.Navigator initialRouteName="fightSystem">
         <Stack.Screen
-          name="combatSysteme"
-          component={combatSysteme}
+          name="fightSystem"
+          component={fightSystem}
           options={{
             headerShown: false,
           }}
@@ -25,8 +25,8 @@ export default function App() {
           }}
         />
         <Stack.Screen
-          name="defaite"
-          component={defaite}
+          name="defeat"
+          component={defeat}
           options={{
             headerShown: false,
           }}

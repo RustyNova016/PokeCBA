@@ -2,9 +2,16 @@ import React, { useState, useEffect } from "react";
 import HealthBar from "../../components/HealthBar";
 import styles from "../../CSS.js";
 
-import { Text, View, ImageBackground, Image, Pressable } from "react-native";
+import {
+  Text,
+  View,
+  ImageBackground,
+  Image,
+  Pressable,
+  Modal,
+} from "react-native";
 
-export default function combatSysteme({ navigation, route }) {
+export default function fightSystem({ navigation, route }) {
   const mob = [
     {
       id_model: 0,
@@ -44,32 +51,34 @@ export default function combatSysteme({ navigation, route }) {
   // VARIABLES POUR LES IMAGES
 
   const [srcBackground, setSrcBackground] = useState(
-    require("../../images/COMBAT.png")
+    require("../../images/backGroundCombat.png")
   );
-  const [srcDresseur, setSrcDresseur] = useState(
-    require("../../images/DRESSEUR.png")
+  const [srcTrainer, setSrcTrainer] = useState(
+    require("../../images/trainer.png")
   );
 
   // AFFICHAGE DES IMAGES DE BASE
 
-  const [showDressor, setShowDressor] = useState(true);
-  const [showPokemon, setShowPokemon] = useState(false);
+  const [showTrainer, setShowTrainer] = useState(true);
+  const [showOurPokemon, setShowOurPokemon] = useState(false);
   const [showPokemonAdv, setShowPokemonAdv] = useState(true);
 
   // VARIABLES POUR LES POKEMONS
 
   // NOTRE POKEMON
 
-  const [numPoke, setNumPoke] = useState(0);
+  const [numPokemon, setNumPokemon] = useState(0);
 
-  const [usHealth, setUsHealth] = useState(mob[numPoke].PV["current"]);
-  const [usMaxHealth, setUsMaxHealth] = useState(mob[numPoke].PV["current"]);
-  const [usAttack, setUsAttack] = useState(mob[numPoke].attack);
-  const [usDefense, setUsDefense] = useState(mob[numPoke].defense);
-  const [usSpeed, setUsSpeed] = useState(mob[numPoke].speed);
-  const [usLevel, setUsLevel] = useState(mob[numPoke].lvl);
-  const [usName, setUsName] = useState(mob[numPoke].label);
-  const [srcUsPokemon, setSrcUsPokemon] = useState(
+  const [ourHealth, setOurHealth] = useState(mob[numPokemon].PV["current"]);
+  const [ourMaxHealth, setOurMaxHealth] = useState(
+    mob[numPokemon].PV["current"]
+  );
+  const [ourAttack, setOurAttack] = useState(mob[numPokemon].attack);
+  const [ourDefense, setOurDefense] = useState(mob[numPokemon].defense);
+  const [ourSpeed, setOurSpeed] = useState(mob[numPokemon].speed);
+  const [ourLevel, setOurLevel] = useState(mob[numPokemon].lvl);
+  const [ourName, setOurName] = useState(mob[numPokemon].label);
+  const [srcOurPokemon, setSrcOurPokemon] = useState(
     require("../../images/SALAMECHE.png")
   );
 
@@ -90,140 +99,140 @@ export default function combatSysteme({ navigation, route }) {
 
   // VARIABLES DIVERSES
 
-  const [usHealthBar, setUsHealthBar] = useState(1);
-  const [colorUsHealthBar, setColorUsHealthBar] = useState("green");
+  const [ourHealthBar, setOurHealthBar] = useState(1);
+  const [colorOurHealthBar, setColorOurHealthBar] = useState("green");
 
   const [advHealthBar, setAdvHealthBar] = useState(1);
   const [colorAdvHealthBar, setColorAdvHealthBar] = useState("green");
 
-  const [hiddenButtonAttaquer, setHiddenButtonAttaquer] = useState(true);
+  const [hiddenButton, setHiddenButton] = useState(true);
 
   // VARIABLE INUTILE POUR MAJ AFFICHAGE
-  const [maj, setMaj] = useState(0);
+  const [majTextBox, setMajTextBox] = useState(0);
 
   useEffect(() => {
     // ON INITIALISE LES VARIABLES DE NOTRE POKEMON
 
-    setUsHealth(mob[numPoke].PV["max"]);
-    setUsMaxHealth(mob[numPoke].PV["max"]);
-    setUsAttack(mob[numPoke].attack);
-    setUsDefense(mob[numPoke].defense);
-    setUsSpeed(mob[numPoke].speed);
-    setUsLevel(mob[numPoke].lvl);
-    setUsName(mob[numPoke].label);
+    setOurHealth(mob[numPokemon].PV["max"]);
+    setOurMaxHealth(mob[numPokemon].PV["max"]);
+    setOurAttack(mob[numPokemon].attack);
+    setOurDefense(mob[numPokemon].defense);
+    setOurSpeed(mob[numPokemon].speed);
+    setOurLevel(mob[numPokemon].lvl);
+    setOurName(mob[numPokemon].label);
 
     // Animation de départ
     setTimeout(() => {
-      updateText(`${mob[numPoke].label} GO !`);
+      updateText(`${mob[numPokemon].label} GO !`);
 
-      setShowDressor(false);
-      setShowPokemon(true);
-      setColorUsHealthBar("green");
-      setUsHealthBar(1);
+      setShowTrainer(false);
+      setShowOurPokemon(true);
+      setColorOurHealthBar("green");
+      setOurHealthBar(1);
     }, 3000);
 
     // Test de vitesse pour savoir qui attaque en premier
     setTimeout(() => {
-      setHiddenButtonAttaquer(false);
+      setHiddenButton(false);
 
-      mob[numPoke].speed < advSpeed
+      mob[numPokemon].speed < advSpeed
         ? (updateText(`${advName} est rapide, il attaque en premier`),
-          setHiddenButtonAttaquer(true),
-          AttackByAdv())
+          setHiddenButton(true),
+          attackByAdv())
         : null;
     }, 4000);
-  }, [numPoke]);
+  }, [numPokemon]);
 
   // Fonction d'attaque par l'ADVERSAIRE
-  const AttackByAdv = function () {
+  const attackByAdv = function () {
     setTimeout(() => {
       // Re Activation du bouton Attaquer
-      setHiddenButtonAttaquer(false);
+      setHiddenButton(false);
 
       // Calcul dégats
-      let degats = 0;
-      degats = parseInt(((advLevel * 0.4 + 2) * advAttack) / usDefense + 2);
+      let damage = 0;
+      damage = parseInt(((advLevel * 0.4 + 2) * advAttack) / ourDefense + 2);
 
       // Calcul de la chance
       let luckyOrNot = Math.random() * (100 - 1) + 1;
 
       // Application des dégats
       if (luckyOrNot <= 10) {
-        (degats = 0),
-          updateText(`${usName} esquive l'attaque !`),
-          setUsHealth(usHealth - degats);
+        (damage = 0),
+          updateText(`${ourName} esquive l'attaque !`),
+          setOurHealth(ourHealth - damage);
       } else if (luckyOrNot <= 90) {
-        usHealth - degats <= 0
-          ? defaite()
-          : (setUsHealth(usHealth - degats),
-            updateText(`${advName} attaque et inflige ${degats} de dégats`));
+        ourHealth - damage <= 0
+          ? defeatForWe()
+          : (setOurHealth(ourHealth - damage),
+            updateText(`${advName} attaque et inflige ${damage} de dégats`));
       } else {
-        degats *= 2;
-        usHealth - degats <= 0
-          ? defaite()
-          : (setUsHealth(usHealth - degats),
+        damage *= 2;
+        ourHealth - damage <= 0
+          ? defeatForWe()
+          : (setOurHealth(ourHealth - damage),
             updateText(
-              `Coup Critique ! ${advName} inflige ${degats} de dégats`
+              `Coup Critique ! ${advName} inflige ${damage} de dégats`
             ));
       }
 
       // MAJ LifeBar
 
-      updateUsHealthBar(degats);
+      updateOurHealthBar(damage);
     }, 1000);
   };
 
   // Fonction d'attaque par NOUS
-  const AttackByUs = function () {
+  const attackByOur = function () {
     // Desactivation bouton Attaquer
-    setHiddenButtonAttaquer(true);
+    setHiddenButton(true);
 
     // Calcul dégats
-    let degats = 0;
-    degats = parseInt(((usLevel * 0.4 + 2) * usAttack) / advDefense + 2);
+    let damage = 0;
+    damage = parseInt(((ourLevel * 0.4 + 2) * ourAttack) / advDefense + 2);
 
     // Calcul de chance
     let luckyOrNot = Math.random() * (100 - 1) + 1;
 
     // Application des dégats
     if (luckyOrNot <= 10) {
-      (degats = 0),
+      (damage = 0),
         updateText(`${advName} esquive l'attaque !`),
-        setAdvHealth(advHealth - degats),
-        AttackByAdv();
+        setAdvHealth(advHealth - damage),
+        attackByAdv();
     } else if (luckyOrNot <= 90) {
-      advHealth - degats <= 0
-        ? victoire()
-        : (setAdvHealth(advHealth - degats),
-          updateText(`${usName} attaque et inflige ${degats} de dégats`),
-          AttackByAdv());
+      advHealth - damage <= 0
+        ? victoireForWe()
+        : (setAdvHealth(advHealth - damage),
+          updateText(`${ourName} attaque et inflige ${damage} de dégats`),
+          attackByAdv());
     } else {
-      degats *= 2;
-      advHealth - degats <= 0
-        ? victoire()
-        : (setAdvHealth(advHealth - degats),
-          updateText(`Coup Critique ! ${usName} inflige ${degats} de dégats`),
-          AttackByAdv());
+      damage *= 2;
+      advHealth - damage <= 0
+        ? victoireForWe()
+        : (setAdvHealth(advHealth - damage),
+          updateText(`Coup Critique ! ${ourName} inflige ${damage} de dégats`),
+          attackByAdv());
     }
 
     // MAJ LifeBar
-    updateAdvHealthBar(degats);
+    updateAdvHealthBar(damage);
   };
 
   // Fonction MAJ de notre HealthBar
-  const updateUsHealthBar = function (a) {
+  const updateOurHealthBar = function (a) {
     // Longueur
-    setUsHealthBar(usHealthBar - a / usMaxHealth);
+    setOurHealthBar(ourHealthBar - a / ourMaxHealth);
 
     // Couleur
-    if (usHealthBar > 0.75) {
-      setColorUsHealthBar("green");
-    } else if (usHealthBar <= 0.25) {
-      setColorUsHealthBar("red");
-    } else if (usHealthBar <= 0.5) {
-      setColorUsHealthBar("orange");
-    } else if (usHealthBar <= 0.75) {
-      setColorUsHealthBar("yellow");
+    if (ourHealthBar > 0.75) {
+      setColorOurHealthBar("green");
+    } else if (ourHealthBar <= 0.25) {
+      setColorOurHealthBar("red");
+    } else if (ourHealthBar <= 0.5) {
+      setColorOurHealthBar("orange");
+    } else if (ourHealthBar <= 0.75) {
+      setColorOurHealthBar("yellow");
     }
   };
 
@@ -251,15 +260,15 @@ export default function combatSysteme({ navigation, route }) {
       textBox.length = 14;
     }
     // MAJ d'une variable inutile pour MAJ affichage
-    setMaj(Math.random());
+    setMajTextBox(Math.random());
   };
 
   // Fonction VICTOIRE
-  const victoire = function () {
+  const victoireForWe = function () {
     setAdvHealth(0);
     updateText(`${advName} est KO, VICTOIRE`);
     setShowPokemonAdv(false);
-    setHiddenButtonAttaquer(true);
+    setHiddenButton(true);
     setTimeout(() => {
       // VERS PAGE VICTOIRE
       navigation.navigate("victoire");
@@ -267,27 +276,27 @@ export default function combatSysteme({ navigation, route }) {
   };
 
   // Fonction DEFAITE
-  const defaite = function () {
-    setUsHealth(0);
-    setHiddenButtonAttaquer(true);
-    setShowPokemon(false);
-    if (numPoke == 1) {
+  const defeatForWe = function () {
+    setOurHealth(0);
+    setHiddenButton(true);
+    setShowOurPokemon(false);
+    if (numPokemon == 1) {
       setTimeout(() => {
         navigation.navigate("defaite");
       }, 2000);
     } else {
-      setNumPoke(numPoke + 1);
-      setSrcUsPokemon(require("../../images/PIKACHU.png"));
+      setNumPokemon(numPokemon + 1);
+      setSrcOurPokemon(require("../../images/PIKACHU.png"));
       setTimeout(() => {
-        updateText(`${usName} est KO`);
-        setShowDressor(true);
+        updateText(`${ourName} est KO`);
+        setShowTrainer(true);
       }, 1000);
     }
   };
 
   return (
     <View style={styles.container}>
-      <ImageBackground source={srcBackground} style={styles.imageBG}>
+      <ImageBackground source={srcBackground} style={styles.imageBackGround}>
         {/* HealthBar Adverse + Affichage Pokemon + Vie Pokemon sauvage*/}
         {showPokemonAdv && (
           <View>
@@ -298,21 +307,19 @@ export default function combatSysteme({ navigation, route }) {
               widthHealthBar={100}
               heigthHealthBar={10}
             />
-            <Image style={styles.imgAdvPOKEMON} source={srcAdvPokemon} />
+            <Image style={styles.imgAdvPokemon} source={srcAdvPokemon} />
             <Text style={styles.advHealth}>{advHealth} /</Text>
             <Text style={styles.advMaxHealth}>{advMaxHealth}</Text>
           </View>
         )}
 
         {/* Gestion affichage dresseur */}
-        {showDressor && (
-          <Image style={styles.imgDRESSOR} source={srcDresseur} />
-        )}
+        {showTrainer && <Image style={styles.imgTrainer} source={srcTrainer} />}
 
         {/* Gestion affichage Pokemon */}
-        {showPokemon && (
+        {showOurPokemon && (
           <View>
-            <Image style={styles.imgUsPOKEMON} source={srcUsPokemon} />
+            <Image style={styles.imgOurPokemon} source={srcOurPokemon} />
           </View>
         )}
 
@@ -324,24 +331,43 @@ export default function combatSysteme({ navigation, route }) {
         </View>
 
         {/* Boutton ATTAQUER */}
-        {!hiddenButtonAttaquer && (
-          <Pressable style={styles.buttonAttaquer} onPress={() => AttackByUs()}>
+        {!hiddenButton && (
+          <Pressable
+            style={styles.buttonAttaquer}
+            onPress={() => attackByOur()}
+          >
             <Text>ATTAQUER</Text>
           </Pressable>
         )}
 
         {/* Notre HealthBar */}
         <HealthBar
-          styleHealthBar={styles.usHealthBar}
-          progressHealthBar={usHealthBar}
-          colorHealthBar={colorUsHealthBar}
+          styleHealthBar={styles.ourHealthBar}
+          progressHealthBar={ourHealthBar}
+          colorHealthBar={colorOurHealthBar}
           widthHealthBar={362}
           heigthHealthBar={24}
         />
 
         {/* Affichage Notre Vie */}
-        <Text style={styles.usHealth}>{usHealth}</Text>
-        <Text style={styles.usMaxHealth}>{usMaxHealth}</Text>
+        <Text style={styles.ourHealth}>{ourHealth}</Text>
+        <Text style={styles.ourMaxHealth}>{ourMaxHealth}</Text>
+
+        <Modal
+          animationType="slide"
+          visible={false}
+          transparent={true}
+          onRequestClose={() => switchModal()}
+        >
+          <View>
+            <View>
+              <Text></Text>
+              <Pressable onPress={() => switchModal()}>
+                <Text> OK </Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
       </ImageBackground>
     </View>
   );

@@ -7,7 +7,7 @@ export default StyleSheet.create({
     flex: 1,
   },
 
-  imageBG: {
+  imageBackGround: {
     flex: 1,
     resizeMode: "cover",
     justifyContent: "center",
@@ -15,7 +15,7 @@ export default StyleSheet.create({
 
   // IMAGES
 
-  imgDRESSOR: {
+  imgTrainer: {
     width: "100%",
     height: 300,
     resizeMode: "contain",
@@ -24,7 +24,7 @@ export default StyleSheet.create({
     left: 70,
   },
 
-  imgAdvPOKEMON: {
+  imgAdvPokemon: {
     width: "100%",
     height: 100,
     resizeMode: "contain",
@@ -33,7 +33,7 @@ export default StyleSheet.create({
     left: 150,
   },
 
-  imgUsPOKEMON: {
+  imgOurPokemon: {
     width: "100%",
     height: 120,
     resizeMode: "contain",
@@ -50,13 +50,13 @@ export default StyleSheet.create({
     left: 20,
   },
 
-  usHealth: {
+  ourHealth: {
     position: "absolute",
     top: 732,
     left: 393,
   },
 
-  usMaxHealth: {
+  ourMaxHealth: {
     position: "absolute",
     top: 732,
     left: 418,
@@ -86,7 +86,7 @@ export default StyleSheet.create({
 
   // HEALTHBAR
 
-  usHealthBar: {
+  ourHealthBar: {
     position: "absolute",
     top: 728,
     left: 16,
