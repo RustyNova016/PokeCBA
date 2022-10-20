@@ -1,14 +1,8 @@
 import React, { useState, useEffect } from "react";
 import HealthBar from "../../components/HealthBar";
-import styles from '../../CSS.js'
+import styles from "../../CSS.js";
 
-import {
-  Text,
-  View,
-  ImageBackground,
-  Image,
-  Pressable,
-} from "react-native";
+import { Text, View, ImageBackground, Image, Pressable } from "react-native";
 
 export default function combatSysteme({ navigation, route }) {
   const mob = [
@@ -257,7 +251,7 @@ export default function combatSysteme({ navigation, route }) {
       textBox.length = 14;
     }
     // MAJ d'une variable inutile pour MAJ affichage
-    setMaj(Math.random()); 
+    setMaj(Math.random());
   };
 
   // Fonction VICTOIRE
@@ -352,5 +346,3 @@ export default function combatSysteme({ navigation, route }) {
     </View>
   );
 }
-
-
