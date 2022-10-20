@@ -1,32 +1,36 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
-import fightSystem from "./vue/game/fightSystem";
-import victoire from "./vue/game/victoire";
-import defeat from "./vue/game/defeat";
+import FightSystem from "./vue/game/FightSystem";
+import Victoire from "./vue/game/Victoire";
+import Defeat from "./vue/game/Defeat";
+import { useFonts } from "expo-font";
 
 const Stack = createNativeStackNavigator();
 
+
 export default function App() {
+
+
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="fightSystem">
+      <Stack.Navigator initialRouteName="FightSystem">
         <Stack.Screen
-          name="fightSystem"
-          component={fightSystem}
+          name="FightSystem"
+          component={FightSystem}
           options={{
             headerShown: false,
           }}
         />
         <Stack.Screen
-          name="victoire"
-          component={victoire}
+          name="Victoire"
+          component={Victoire}
           options={{
             headerShown: false,
           }}
         />
         <Stack.Screen
-          name="defeat"
-          component={defeat}
+          name="Defeat"
+          component={Defeat}
           options={{
             headerShown: false,
           }}

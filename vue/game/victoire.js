@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Text, Animated, View, StyleSheet, Image } from "react-native";
 
-export default function victoire() {
+export default function Victoire() {
   const [imgVictoire] = useState(require("../../images/imgVictoire.png"));
   const fadeAnim = useRef(new Animated.Value(0)).current;
 

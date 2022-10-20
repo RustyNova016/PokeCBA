@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Text, Animated, View, StyleSheet, Image } from "react-native";
 
-export default function defaite() {
+export default function Defeat() {
   const [imgDefeat] = useState(require("../../images/imgDefeat.png"));
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
