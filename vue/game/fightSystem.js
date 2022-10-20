@@ -97,7 +97,7 @@ export default function fightSystem({ navigation, route }) {
 
   const [textBox, setTextBox] = useState([`Un ${advName} sauvage apparait`]);
 
-  // VARIABLES DIVERSES
+  // VARIABLES HEALTHBAR
 
   const [ourHealthBar, setOurHealthBar] = useState(1);
   const [colorOurHealthBar, setColorOurHealthBar] = useState("green");
@@ -105,7 +105,11 @@ export default function fightSystem({ navigation, route }) {
   const [advHealthBar, setAdvHealthBar] = useState(1);
   const [colorAdvHealthBar, setColorAdvHealthBar] = useState("green");
 
+  // VARIABLES AFFICHAGE
+
   const [hiddenButton, setHiddenButton] = useState(true);
+  const [showModalAttack, setShowModalAttack] = useState(true);
+  const [showModalBag, setShowModalBag] = useState(false);
 
   // VARIABLE INUTILE POUR MAJ AFFICHAGE
   const [majTextBox, setMajTextBox] = useState(0);
@@ -163,13 +167,13 @@ export default function fightSystem({ navigation, route }) {
           setOurHealth(ourHealth - damage);
       } else if (luckyOrNot <= 90) {
         ourHealth - damage <= 0
-          ? defeatForWe()
+          ? defeatForUs()
           : (setOurHealth(ourHealth - damage),
             updateText(`${advName} attaque et inflige ${damage} de dégats`));
       } else {
         damage *= 2;
         ourHealth - damage <= 0
-          ? defeatForWe()
+          ? defeatForUs()
           : (setOurHealth(ourHealth - damage),
             updateText(
               `Coup Critique ! ${advName} inflige ${damage} de dégats`
@@ -202,14 +206,14 @@ export default function fightSystem({ navigation, route }) {
         attackByAdv();
     } else if (luckyOrNot <= 90) {
       advHealth - damage <= 0
-        ? victoireForWe()
+        ? victoireForUs()
         : (setAdvHealth(advHealth - damage),
           updateText(`${ourName} attaque et inflige ${damage} de dégats`),
           attackByAdv());
     } else {
       damage *= 2;
       advHealth - damage <= 0
-        ? victoireForWe()
+        ? victoireForUs()
         : (setAdvHealth(advHealth - damage),
           updateText(`Coup Critique ! ${ourName} inflige ${damage} de dégats`),
           attackByAdv());
@@ -264,7 +268,7 @@ export default function fightSystem({ navigation, route }) {
   };
 
   // Fonction VICTOIRE
-  const victoireForWe = function () {
+  const victoireForUs = function () {
     setAdvHealth(0);
     updateText(`${advName} est KO, VICTOIRE`);
     setShowPokemonAdv(false);
@@ -276,13 +280,14 @@ export default function fightSystem({ navigation, route }) {
   };
 
   // Fonction DEFAITE
-  const defeatForWe = function () {
+  const defeatForUs = function () {
     setOurHealth(0);
     setHiddenButton(true);
     setShowOurPokemon(false);
     if (numPokemon == 1) {
       setTimeout(() => {
-        navigation.navigate("defaite");
+        // VERS PAGE DEFAITE
+        navigation.navigate("defeat");
       }, 2000);
     } else {
       setNumPokemon(numPokemon + 1);
@@ -330,14 +335,22 @@ export default function fightSystem({ navigation, route }) {
           })}
         </View>
 
-        {/* Boutton ATTAQUER */}
+        {/* Bouttons */}
         {!hiddenButton && (
-          <Pressable
-            style={styles.buttonAttaquer}
-            onPress={() => attackByOur()}
-          >
-            <Text>ATTAQUER</Text>
-          </Pressable>
+          <View>
+            <Pressable
+              style={styles.buttonAttack}
+              onPress={() => setShowModalAttack(!showModalAttack)}
+            >
+              <Text>ATTAQUER</Text>
+            </Pressable>
+            <Pressable
+              style={styles.buttonBag}
+              onPress={() => setShowModalBag(!showModalBag)}
+            >
+              <Text>SAC</Text>
+            </Pressable>
+          </View>
         )}
 
         {/* Notre HealthBar */}
@@ -353,17 +366,41 @@ export default function fightSystem({ navigation, route }) {
         <Text style={styles.ourHealth}>{ourHealth}</Text>
         <Text style={styles.ourMaxHealth}>{ourMaxHealth}</Text>
 
+        {/* Modal pour les attaques */}
         <Modal
           animationType="slide"
-          visible={false}
+          visible={showModalAttack}
           transparent={true}
-          onRequestClose={() => switchModal()}
+          onRequestClose={() => setShowModalAttack(!showModalAttack)}
         >
           <View>
-            <View>
-              <Text></Text>
-              <Pressable onPress={() => switchModal()}>
-                <Text> OK </Text>
+            <View style={styles.modalView}>
+              <Pressable
+                style={styles.buttonModal}
+                onPress={() => {
+                  attackByOur(), setShowModalAttack(!showModalAttack);
+                }}
+              >
+                <Text style={styles.textModal}> ATTAQUER 1</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+
+        {/* Modal pour les objets */}
+        <Modal
+          animationType="slide"
+          visible={showModalBag}
+          transparent={true}
+          onRequestClose={() => setShowModalBag(!showModalBag)}
+        >
+          <View>
+            <View style={styles.modalView}>
+              <Pressable
+                style={styles.buttonModal}
+                // onPress={() => switchModal()}
+              >
+                <Text style={styles.textModal}> SAC </Text>
               </Pressable>
             </View>
           </View>
