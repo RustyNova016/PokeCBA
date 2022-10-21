@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import HealthBar from "../../components/HealthBar";
+import HealthBar from "../../components/HealthBar/HealthBar";
 import styles from "../../CSS.js";
-import { useFonts } from "expo-font";
+import { Shake } from "react-native-motion";
+import * as constClass from "../../Constants.js";
 
 import {
   Text,
@@ -61,17 +62,9 @@ export default function FightSystem({ navigation, route }) {
     },
   ];
 
-  // VARIABLES POLICE
-
-  const [fontsLoaded] = useFonts({
-    SHPinscher: require("../../assets/fonts/SHPinscher-Regular.otf"),
-  });
-
   // VARIABLES POUR LES IMAGES
 
-  const [srcBackground, setSrcBackground] = useState(
-    require("../../images/backGroundCombat.png")
-  );
+  const srcBackground = constClass.srcBackground;
   const [srcTrainer, setSrcTrainer] = useState(
     require("../../images/trainer.png")
   );
@@ -113,8 +106,12 @@ export default function FightSystem({ navigation, route }) {
   const [srcAdvPokemon] = useState(require(`../../images/CARAPUCE.png`));
 
   // VARIABLE TEXT BOX
+  const [textBox, setTextBox] = useState([
+    `Un ${advName} sauvage, niveau ${advLevel} apparait`,
+  ]);
 
-  const [textBox, setTextBox] = useState([`Un ${advName} sauvage apparait`]);
+  // VARIABLE INUTILE POUR MAJ TEXTBOX
+  const [majTextBox, setMajTextBox] = useState(0);
 
   // VARIABLES HEALTHBAR
 
@@ -124,14 +121,13 @@ export default function FightSystem({ navigation, route }) {
   const [advHealthBar, setAdvHealthBar] = useState(1);
   const [colorAdvHealthBar, setColorAdvHealthBar] = useState("green");
 
-  // VARIABLES AFFICHAGE
+  // VARIABLES AFFICHAGE ET ANIMATION
 
   const [hiddenButton, setHiddenButton] = useState(true);
   const [showModalAttack, setShowModalAttack] = useState(false);
   const [showModalBag, setShowModalBag] = useState(false);
-
-  // VARIABLE INUTILE POUR MAJ AFFICHAGE
-  const [majTextBox, setMajTextBox] = useState(0);
+  const [ourAnimation, setOurAnimation] = useState(0);
+  const [advAnimation, setAdvAnimation] = useState(0);
 
   useEffect(() => {
     // ON INITIALISE LES VARIABLES DE NOTRE POKEMON
@@ -167,13 +163,24 @@ export default function FightSystem({ navigation, route }) {
 
   // Fonction d'attaque par l'ADVERSAIRE
   const attackByAdv = function () {
+    // On choisit une attaque au hasard dans les capacités du Pokémon
+    let numAdvAttack = Math.round(
+      Math.random() * (mob[2].capacities.length - 1)
+    );
+    let nameAdvAttack = mob[2].capacities[numAdvAttack].name;
+    let powerAdvAttack = mob[2].capacities[numAdvAttack].power;
+
     setTimeout(() => {
       // Re Activation du bouton Attaquer
       setHiddenButton(false);
 
       // Calcul dégats
       let damage = 0;
-      damage = parseInt(((advLevel * 0.4 + 2) * advAttack) / ourDefense + 2);
+      damage = parseInt(
+        ((advLevel * 0.4 + 2) * advAttack * powerAdvAttack) /
+          (ourDefense * 25) +
+          2
+      );
 
       // Calcul de la chance
       let luckyOrNot = Math.random() * (100 - 1) + 1;
@@ -187,32 +194,37 @@ export default function FightSystem({ navigation, route }) {
         ourHealth - damage <= 0
           ? defeatForUs()
           : (setOurHealth(ourHealth - damage),
-            updateText(`${advName} attaque et inflige ${damage} de dégats`));
+            updateText(
+              `Attaque ${nameAdvAttack} ! Elle inflige ${damage} de dégats`
+            ));
       } else {
         damage *= 2;
         ourHealth - damage <= 0
           ? defeatForUs()
           : (setOurHealth(ourHealth - damage),
             updateText(
-              `Coup Critique ! ${advName} inflige ${damage} de dégats`
+              `Coup Critique ! ${nameAdvAttack} inflige ${damage} de dégats`
             ));
       }
 
       // MAJ LifeBar
-
       updateOurHealthBar(damage);
+
+      // Animation du Pokémon adverse
+      setAdvAnimation(advAnimation + 1);
     }, 1000);
   };
 
   // Fonction d'attaque par NOUS
-  const attackByOur = function (nameAttack, powerAttack) {
+  const attackByOur = function (nameOurAttack, powerOurAttack) {
     // Desactivation bouton Attaquer
     setHiddenButton(true);
 
     // Calcul dégats
     let damage = 0;
     damage = parseInt(
-      ((ourLevel * 0.4 + 2) * ourAttack * powerAttack) / (advDefense * 25) + 2
+      ((ourLevel * 0.4 + 2) * ourAttack * powerOurAttack) / (advDefense * 25) +
+        2
     );
 
     // Calcul de chance
@@ -228,7 +240,9 @@ export default function FightSystem({ navigation, route }) {
       advHealth - damage <= 0
         ? victoireForUs()
         : (setAdvHealth(advHealth - damage),
-          updateText(`${ourName} attaque et inflige ${damage} de dégats`),
+          updateText(
+            `Attaque ${nameOurAttack} ! Elle inflige ${damage} de dégats`
+          ),
           attackByAdv());
     } else {
       damage *= 2;
@@ -236,13 +250,16 @@ export default function FightSystem({ navigation, route }) {
         ? victoireForUs()
         : (setAdvHealth(advHealth - damage),
           updateText(
-            `Coup Critique ! ${nameAttack} inflige ${damage} de dégats`
+            `Coup Critique ! ${nameOurAttack} inflige ${damage} de dégats`
           ),
           attackByAdv());
     }
 
     // MAJ LifeBar
     updateAdvHealthBar(damage);
+
+    // Animation de notre Pokemon
+    setOurAnimation(ourAnimation + 1);
   };
 
   // Fonction MAJ de notre HealthBar
@@ -282,8 +299,8 @@ export default function FightSystem({ navigation, route }) {
   // Fonction de MAJ de la TextBox
   const updateText = function (text) {
     textBox.unshift(text);
-    if (textBox.length > 14) {
-      textBox.length = 14;
+    if (textBox.length > 10) {
+      textBox.length = 10;
     }
     // MAJ d'une variable inutile pour MAJ affichage
     setMajTextBox(Math.random());
@@ -323,10 +340,10 @@ export default function FightSystem({ navigation, route }) {
 
   return (
     <View style={styles.container}>
-      {fontsLoaded && ( // On vérifie le chargement de la police avant affichage
-        <ImageBackground source={srcBackground} style={styles.imageBackGround}>
-          {/* HealthBar Adverse + Affichage Pokemon + Vie Pokemon sauvage*/}
-          {showPokemonAdv && (
+      <ImageBackground source={srcBackground} style={styles.imageBackGround}>
+        {/* HealthBar Adverse + Affichage Pokemon + Vie Pokemon sauvage*/}
+        {showPokemonAdv && (
+          <Shake value={advAnimation} type="timing">
             <View>
               <HealthBar
                 styleHealthBar={styles.advHealthBar}
@@ -339,104 +356,104 @@ export default function FightSystem({ navigation, route }) {
               <Text style={styles.advHealth}>{advHealth} /</Text>
               <Text style={styles.advMaxHealth}>{advMaxHealth}</Text>
             </View>
-          )}
+          </Shake>
+        )}
 
-          {/* Gestion affichage dresseur */}
-          {showTrainer && (
-            <Image style={styles.imgTrainer} source={srcTrainer} />
-          )}
+        {/* Gestion affichage dresseur */}
+        {showTrainer && <Image style={styles.imgTrainer} source={srcTrainer} />}
 
-          {/* Gestion affichage Pokemon */}
-          {showOurPokemon && (
+        {/* Gestion affichage Pokemon */}
+        {showOurPokemon && (
+          <Shake value={ourAnimation} type="timing">
             <View>
               <Image style={styles.imgOurPokemon} source={srcOurPokemon} />
             </View>
-          )}
+          </Shake>
+        )}
 
-          {/* TextBox */}
-          <View style={styles.textBox}>
-            {textBox.map((ligne) => {
-              return <Text style={styles.pixelPolice}>- {ligne}</Text>;
-            })}
+        {/* TextBox */}
+        <View style={styles.textBox}>
+          {textBox.map((ligne) => {
+            return <Text style={styles.pixelPolice}>- {ligne}</Text>;
+          })}
+        </View>
+
+        {/* Bouttons */}
+        {!hiddenButton && (
+          <View>
+            <Pressable
+              style={styles.buttonAttack}
+              onPress={() => setShowModalAttack(!showModalAttack)}
+            >
+              <Text style={styles.pixelPolice}>ATTAQUER</Text>
+            </Pressable>
+            <Pressable
+              style={styles.buttonBag}
+              onPress={() => setShowModalBag(!showModalBag)}
+            >
+              <Text style={styles.pixelPolice}>SAC</Text>
+            </Pressable>
           </View>
+        )}
 
-          {/* Bouttons */}
-          {!hiddenButton && (
-            <View>
+        {/* Notre HealthBar */}
+        <HealthBar
+          styleHealthBar={styles.ourHealthBar}
+          progressHealthBar={ourHealthBar}
+          colorHealthBar={colorOurHealthBar}
+          widthHealthBar={362}
+          heigthHealthBar={24}
+        />
+
+        {/* Affichage Notre Vie */}
+        <Text style={styles.ourHealth}>{ourHealth}</Text>
+        <Text style={styles.ourMaxHealth}>{ourMaxHealth}</Text>
+
+        {/* Modal pour les attaques */}
+        <Modal
+          animationType="slide"
+          visible={showModalAttack}
+          transparent={true}
+          onRequestClose={() => setShowModalAttack(!showModalAttack)}
+        >
+          <View>
+            <View style={styles.modalView}>
+              {mob[numPokemon].capacities.map((el) => {
+                return (
+                  <Pressable
+                    style={styles.buttonModal}
+                    onPress={() => {
+                      attackByOur(el.name, el.power),
+                        setShowModalAttack(!showModalAttack);
+                    }}
+                  >
+                    <Text style={styles.textModal}>{el.name}</Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </View>
+        </Modal>
+
+        {/* Modal pour les objets */}
+        <Modal
+          animationType="slide"
+          visible={showModalBag}
+          transparent={true}
+          onRequestClose={() => setShowModalBag(!showModalBag)}
+        >
+          <View>
+            <View style={styles.modalView}>
               <Pressable
-                style={styles.buttonAttack}
-                onPress={() => setShowModalAttack(!showModalAttack)}
+                style={styles.buttonModal}
+                // onPress={() => switchModal()}
               >
-                <Text style={styles.pixelPolice}>ATTAQUER</Text>
-              </Pressable>
-              <Pressable
-                style={styles.buttonBag}
-                onPress={() => setShowModalBag(!showModalBag)}
-              >
-                <Text style={styles.pixelPolice}>SAC</Text>
+                <Text style={styles.textModal}> SAC </Text>
               </Pressable>
             </View>
-          )}
-
-          {/* Notre HealthBar */}
-          <HealthBar
-            styleHealthBar={styles.ourHealthBar}
-            progressHealthBar={ourHealthBar}
-            colorHealthBar={colorOurHealthBar}
-            widthHealthBar={362}
-            heigthHealthBar={24}
-          />
-
-          {/* Affichage Notre Vie */}
-          <Text style={styles.ourHealth}>{ourHealth}</Text>
-          <Text style={styles.ourMaxHealth}>{ourMaxHealth}</Text>
-
-          {/* Modal pour les attaques */}
-          <Modal
-            animationType="slide"
-            visible={showModalAttack}
-            transparent={true}
-            onRequestClose={() => setShowModalAttack(!showModalAttack)}
-          >
-            <View>
-              <View style={styles.modalView}>
-                {mob[numPokemon].capacities.map((el) => {
-                  return (
-                    <Pressable
-                      style={styles.buttonModal}
-                      onPress={() => {
-                        attackByOur(el.name, el.power),
-                          setShowModalAttack(!showModalAttack);
-                      }}
-                    >
-                      <Text style={styles.textModal}>{el.name}</Text>
-                    </Pressable>
-                  );
-                })}
-              </View>
-            </View>
-          </Modal>
-
-          {/* Modal pour les objets */}
-          <Modal
-            animationType="slide"
-            visible={showModalBag}
-            transparent={true}
-            onRequestClose={() => setShowModalBag(!showModalBag)}
-          >
-            <View>
-              <View style={styles.modalView}>
-                <Pressable
-                  style={styles.buttonModal}
-                  // onPress={() => switchModal()}
-                >
-                  <Text style={styles.textModal}> SAC </Text>
-                </Pressable>
-              </View>
-            </View>
-          </Modal>
-        </ImageBackground>
-      )}
+          </View>
+        </Modal>
+      </ImageBackground>
     </View>
   );
 }
