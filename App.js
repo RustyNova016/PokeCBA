@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
-import FightSystem from "./vue/game/FightSystem";
+import FightPVE from "./vue/game/FightPVE";
 import Victoire from "./vue/game/Victoire";
 import Defeat from "./vue/game/Defeat";
 import { useFonts } from "expo-font";
@@ -17,10 +17,10 @@ export default function App() {
   return (
     <NavigationContainer>
       {fontsLoaded && ( // On vérifie le chargement de la police avant affichage
-        <Stack.Navigator initialRouteName="FightSystem">
+        <Stack.Navigator initialRouteName="FightPVE">
           <Stack.Screen
-            name="FightSystem"
-            component={FightSystem}
+            name="FightPVE"
+            component={FightPVE}
             options={{
               headerShown: false,
             }}
