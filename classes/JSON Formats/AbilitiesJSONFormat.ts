@@ -1,4 +1,4 @@
-import {DB_ID} from "./TypeJSONFormat";
+import {DB_ID} from "./ElementTypeJSONFormat";
 
 export interface AbilitiesJSONFormat {
     name: string;
