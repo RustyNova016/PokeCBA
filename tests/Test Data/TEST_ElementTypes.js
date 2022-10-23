@@ -1,4 +1,14 @@
-export const TEST_Types = {
+/** @type {ElementTypeJSONFormat} */
+const normal = {
+    idType: 4,
+    name: "Normal",
+    strongAgainst: [],
+    weakAgainst: [],
+    immune: []
+};
+
+export const TEST_ElementTypes = {
+
     fire: {
         idType: 1,
         name: "fire",
@@ -23,8 +33,5 @@ export const TEST_Types = {
         immune: []
     },
 
-    normal: {
-        idType: 4,
-        name: "Normal",
-    }
+    normal: normal
 }

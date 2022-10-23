@@ -40,7 +40,7 @@ export class ElementTypeCollection {
      */
     addType(json) {
         // Check if the type is already in the collection
-        if (this.findType(json.idType !== -1)) {
+        if (this.findType(json.idType) !== -1) {
             return
         }
 
@@ -48,5 +48,15 @@ export class ElementTypeCollection {
         const newType = new ElementType(json.idType, json.name, json.strongAgainst, json.weakAgainst, json.immune, this);
 
         this.types.push(newType);
+    }
+
+    /** Add an array of element type to the collection
+     *
+     * @param {ElementTypeJSONFormat[]} jsonArray
+     */
+    addTypes(jsonArray) {
+        for (const elementTypeJSONFormat of jsonArray) {
+            this.addType(elementTypeJSONFormat)
+        }
     }
 }

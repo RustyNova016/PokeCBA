@@ -1,17 +1,15 @@
 // @generated: @expo/next-adapter@2.1.52
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {Mob_Model} from "../classes/Mob_Model";
-import {TEST_Mob_Model} from "../tests/TEST_Mob_Model";
-
-function Debug_MobModel(props) {
-    return <View>
-        <Text>Name: {props.mob.name}</Text>
-    </View>;
-}
+import {MobModel} from "../classes/MobModel";
+import {TEST_Mob_Model} from "../tests/Test Data/TEST_Mob_Model";
+import {Debug_MobModel} from "../tests/Debug Components/Debug_MobModel";
+import {useElementType} from "../API/Data Hooks/useElementType";
 
 export default function App() {
-    const testBabaure = Mob_Model.fromJson(TEST_Mob_Model.babasaure);
+    useElementType()
+    console.log("Creating test babasaure")
+    const testBabaure = MobModel.fromJson(TEST_Mob_Model.babasaure);
 
     return (
         <View style={styles.container}>
@@ -24,9 +22,11 @@ export default function App() {
 
 const styles = StyleSheet.create({
     container: {
+        display: "flex",
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        marginVertical: 50
     },
     text: {
         fontSize: 16,
