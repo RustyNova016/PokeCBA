@@ -1,5 +1,3 @@
-import {ElementType} from "./ElementType";
-
 export class ElementType {
     /** Type of the mob/attacks
      *

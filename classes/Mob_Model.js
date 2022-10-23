@@ -9,11 +9,22 @@ export class Mob_Model {
     speed;
     isShiny;
     img;
-    capacities;
+    abilities;
     types;
 
-
-    constructor(id_mob_model, name, attack, defense, speed, isShiny, img, capacities, types) {
+    /** Model of a mob
+     *
+     * @param {DB_ID} id_mob_model
+     * @param {string} name
+     * @param {number} attack
+     * @param {number} defense
+     * @param {number} speed
+     * @param {boolean} isShiny
+     * @param {string[]} img
+     * @param {Ability[]} abilities
+     * @param {ElementType} types
+     */
+    constructor(id_mob_model, name, attack, defense, speed, isShiny, img, abilities, types) {
         this.id_mob_model = id_mob_model;
         this.name = name;
         this.attack = attack;
@@ -21,7 +32,7 @@ export class Mob_Model {
         this.speed = speed;
         this.isShiny = isShiny;
         this.img = img;
-        this.capacities = capacities;
+        this.abilities = abilities;
         this.types;
     }
 
@@ -29,7 +40,8 @@ export class Mob_Model {
      *
      * @param json
      */
-    static fromJson(json) {Ability.fromJson();
+    static fromJson(json) {
+        Ability.fromJson();
         const abilities = [];
         const types = [];
 

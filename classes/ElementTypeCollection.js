@@ -36,7 +36,7 @@ export class ElementTypeCollection {
 
     /** Add a type to the collection
      *
-     * @param {TypeJSONFormat} json
+     * @param {ElementTypeJSONFormat} json
      */
     addType(json) {
         // Check if the type is already in the collection
