@@ -11,5 +11,5 @@ export interface MobModelJSONFormat {
     isShiny: boolean;
     img: string[];
     abilities: AbilitiesJSONFormat[];
-    elementTypes: DB_ID[];
+    elementsType: DB_ID[];
 }

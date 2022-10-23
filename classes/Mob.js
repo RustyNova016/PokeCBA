@@ -6,7 +6,7 @@ import {Ability} from "./Abilities";
 export class Mob {
     /**
      *
-     * @param {DB_ID} idMob
+     * @param {DB_ID|null} idMob
      * @param {DB_ID} id_model
      * @param {string} nickname
      * @param {number} HP
@@ -17,7 +17,7 @@ export class Mob {
      * @param {string[]} img
      * @param {Ability[]} abilities
      * @param {number} XP
-     * @param {DB_ID} idItem
+     * @param {DB_ID|null} idItem
      */
     constructor(idMob, id_model, nickname, HP, HPMax, attack, defence, speed, img, abilities, XP, idItem) {
         this.idMob = idMob
@@ -59,5 +59,14 @@ export class Mob {
             json.XP,
             json.idItem
         )
+    }
+
+    /** Generate a new mob from a model
+     *
+     * @param {MobModel} mobModel
+     * @param {string} nickname
+     */
+    createNewMob(mobModel, nickname){
+        return new Mob(null, mobModel.idMobModel, nickname, mobModel.HP, mobModel.HP, mobModel.attack, mobModel.defense, mobModel.speed, mobModel.img, mobModel.abilities, 0, null)
     }
 }
