@@ -3,16 +3,6 @@ import {ElementType} from "./ElementType";
 import {ElementTypeCollection} from "./ElementTypeCollection";
 
 export class MobModel {
-    idMobModel;
-    name;
-    attack;
-    defense;
-    speed;
-    isShiny;
-    img;
-    abilities;
-    types;
-
     /** Model of a mob
      *
      * @param {DB_ID} id_mob_model
