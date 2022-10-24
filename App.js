@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import FightPVE from "./vue/game/FightPVE";
-import Victoire from "./vue/game/Victoire";
+import Victory from "./vue/game/Victory";
 import Defeat from "./vue/game/Defeat";
 import { useFonts } from "expo-font";
 
@@ -26,8 +26,8 @@ export default function App() {
             }}
           />
           <Stack.Screen
-            name="Victoire"
-            component={Victoire}
+            name="Victory"
+            component={Victory}
             options={{
               headerShown: false,
             }}

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import HealthBar from "../../components/HealthBar/HealthBar";
+import { CalculateDamage } from "../../tools/CalculateDamage.js";
+import { ColorHealthBar } from "../../tools/ColorHealthBar";
 import { StyleSheet } from "react-native";
 import { Shake } from "react-native-motion";
 import * as constClass from "../../Constants.js";
@@ -11,8 +13,6 @@ import {
   Image,
   Pressable,
   Modal,
-  SafeAreaView,
-  ScrollView,
 } from "react-native";
 
 const mob = [
@@ -67,7 +67,7 @@ const item = [
   {
     name: "Potion",
     effect: 10,
-    qty: 2,
+    qty: 3,
   },
   {
     name: "Mega-Potion",
@@ -122,13 +122,6 @@ export default function FightPVE({ navigation, route }) {
   // VARIABLE INUTILE POUR MAJ TEXTBOX
   const [majTextBox, setMajTextBox] = useState(0);
 
-  // VARIABLES HEALTHBAR
-  const [ourHealthBar, setOurHealthBar] = useState(1);
-  const [colorOurHealthBar, setColorOurHealthBar] = useState("green");
-
-  const [advHealthBar, setAdvHealthBar] = useState(1);
-  const [colorAdvHealthBar, setColorAdvHealthBar] = useState("green");
-
   // VARIABLES AFFICHAGE ET ANIMATION
   const [hiddenButton, setHiddenButton] = useState(true);
   const [showModalAttack, setShowModalAttack] = useState(false);
@@ -151,9 +144,7 @@ export default function FightPVE({ navigation, route }) {
       updateText(`${mob[numPokemon].label} GO !`);
       setShowTrainer(false);
       setShowOurPokemon(true);
-      setColorOurHealthBar("green");
-      setOurHealthBar(1);
-    }, 3000);
+    }, 2000);
 
     // Test de vitesse pour savoir qui attaque en premier
     setTimeout(() => {
@@ -164,11 +155,11 @@ export default function FightPVE({ navigation, route }) {
           setHiddenButton(true),
           attackByAdv())
         : null;
-    }, 4000);
+    }, 3000);
   }, [numPokemon]);
 
   // Fonction d'attaque par l'ADVERSAIRE
-  const attackByAdv = function () {
+  const attackByAdv = function (effectItem) {
     // On choisit une attaque au hasard dans les capacités du Pokémon
     let numAdvAttack = Math.round(
       Math.random() * (mob[2].capacities.length - 1)
@@ -176,49 +167,32 @@ export default function FightPVE({ navigation, route }) {
     let nameAdvAttack = mob[2].capacities[numAdvAttack].name;
     let powerAdvAttack = mob[2].capacities[numAdvAttack].power;
 
+    // Appel de la fonction : Calcul dégats et définition du texte
+    let result = CalculateDamage(
+      advLevel,
+      advAttack,
+      nameAdvAttack,
+      powerAdvAttack,
+      ourDefense,
+      ourName
+    );
+
+    // On récupére les résultats de la fonction
+    let damage = result[0];
+    let text = result[1];
+
+    // On affecte une valeur à effecItem pour la vérification : autre solution ?
+    effectItem == undefined ? (effectItem = 0) : null;
+
+    // On réaffecte les différentes variables
     setTimeout(() => {
-      // Re Activation du bouton Attaquer
-      setHiddenButton(false);
-
-      // Calcul dégats
-      let damage = 0;
-      damage = parseInt(
-        ((advLevel * 0.4 + 2) * advAttack * powerAdvAttack) /
-          (ourDefense * 25) +
-          2
-      );
-
-      // Calcul de la chance
-      let luckyOrNot = Math.random() * (100 - 1) + 1;
-
-      // Application des dégats
-      if (luckyOrNot <= 10) {
-        (damage = 0),
-          updateText(`${ourName} esquive l'attaque !`),
-          setOurHealth((ourHealth) => ourHealth - damage);
-      } else if (luckyOrNot <= 90) {
-        ourHealth - damage <= 0
-          ? defeatForUs()
-          : (setOurHealth((ourHealth) => ourHealth - damage),
-            updateText(
-              `Attaque ${nameAdvAttack} ! Elle inflige ${damage} de dégats`
-            ));
-      } else {
-        damage *= 2;
-        ourHealth - damage <= 0
-          ? defeatForUs()
-          : (setOurHealth((ourHealth) => ourHealth - damage),
-            updateText(
-              `Coup Critique ! ${nameAdvAttack} inflige ${damage} de dégats`
-            ));
-      }
-
-      // MAJ LifeBar
-      updateOurHealthBar(damage);
-
-      // Animation du Pokémon adverse
-      setAdvAnimation(advAnimation + 1);
-    }, 1000);
+      ourHealth + effectItem - damage > 0
+        ? (setOurHealth((ourHealth) => ourHealth - damage),
+          updateText(text),
+          setAdvAnimation(advAnimation + 1),
+          setHiddenButton(false))
+        : (updateText(text), defeatForUs());
+    }, 1500);
   };
 
   // Fonction d'attaque par NOUS
@@ -226,80 +200,52 @@ export default function FightPVE({ navigation, route }) {
     // Desactivation bouton Attaquer
     setHiddenButton(true);
 
-    // Calcul dégats
-    let damage = 0;
-    damage = parseInt(
-      ((ourLevel * 0.4 + 2) * ourAttack * powerOurAttack) / (advDefense * 25) +
-        2
+    // Appel de la fonction : Calcul dégats et définition du texte
+    let result = CalculateDamage(
+      ourLevel,
+      ourAttack,
+      nameOurAttack,
+      powerOurAttack,
+      advDefense,
+      advName
     );
 
-    // Calcul de chance
-    let luckyOrNot = Math.random() * (100 - 1) + 1;
+    // On récupére les résultats de la fonction
+    let damage = result[0];
+    let text = result[1];
 
-    // Application des dégats
-    if (luckyOrNot <= 10) {
-      (damage = 0),
-        updateText(`${advName} esquive l'attaque !`),
-        setAdvHealth((advHealth) => advHealth - damage),
-        attackByAdv();
-    } else if (luckyOrNot <= 90) {
-      advHealth - damage <= 0
-        ? victoireForUs()
-        : (setAdvHealth((advHealth) => advHealth - damage),
-          updateText(
-            `Attaque ${nameOurAttack} ! Elle inflige ${damage} de dégats`
-          ),
-          attackByAdv());
-    } else {
-      damage *= 2;
-      advHealth - damage <= 0
-        ? victoireForUs()
-        : (setAdvHealth((advHealth) => advHealth - damage),
-          updateText(
-            `Coup Critique ! ${nameOurAttack} inflige ${damage} de dégats`
-          ),
-          attackByAdv());
-    }
-
-    // MAJ LifeBar
-    updateAdvHealthBar(damage);
-
-    // Animation de notre Pokemon
+    // On réaffecte les différentes variables
+    setAdvHealth((advHealth) => advHealth - damage);
+    updateText(text);
     setOurAnimation(ourAnimation + 1);
+    setHiddenButton(true);
+    advHealth - damage <= 0 ? victoryForUs() : attackByAdv();
   };
 
-  // Fonction MAJ de notre HealthBar
-  const updateOurHealthBar = function (a) {
-    // Longueur
-    setOurHealthBar((ourHealthBar) => ourHealthBar - a / ourMaxHealth);
+  // Fonction utilisation ITEM
+  const useItem = function (nameItem, effectItem, indexItem) {
+    // On cache les boutons du Menu
+    setHiddenButton(true);
 
-    // Couleur
-    if (ourHealthBar > 0.75) {
-      setColorOurHealthBar("green");
-    } else if (ourHealthBar <= 0.25) {
-      setColorOurHealthBar("red");
-    } else if (ourHealthBar <= 0.5) {
-      setColorOurHealthBar("orange");
-    } else if (ourHealthBar <= 0.75) {
-      setColorOurHealthBar("yellow");
+    // On enleve une quantité de l'objet dans notre inventaire
+    item[indexItem].qty--;
+
+    // On supprime l'objet de notre inventaire si quantité = 0
+    let qty = item[indexItem].qty;
+    qty == 0 ? item.splice(indexItem, 1) : null;
+
+    // On applique l'effet de l'Item
+    if (ourHealth + effectItem > ourMaxHealth) {
+      setOurHealth(ourMaxHealth);
+    } else {
+      setOurHealth((ourHealth) => ourHealth + effectItem);
     }
-  };
 
-  // Fonction MAJ HealthBar Adverse
-  const updateAdvHealthBar = function (a) {
-    // Longueur
-    setAdvHealthBar((advHealthBar) => advHealthBar - a / advMaxHealth);
+    // On mets à jour la textBox
+    updateText(`${nameItem} vous redonne ${effectItem} PV`);
 
-    // Couleur
-    if (advHealthBar > 0.75) {
-      setColorAdvHealthBar("green");
-    } else if (advHealthBar <= 0.25) {
-      setColorAdvHealthBar("red");
-    } else if (advHealthBar <= 0.5) {
-      setColorAdvHealthBar("orange");
-    } else if (advHealthBar <= 0.75) {
-      setColorAdvHealthBar("yellow");
-    }
+    // Appel fonction d'attaque adverse avec l'effet de l'item pour vérification
+    attackByAdv(effectItem);
   };
 
   // Fonction de MAJ de la TextBox
@@ -312,41 +258,20 @@ export default function FightPVE({ navigation, route }) {
     setMajTextBox(Math.random());
   };
 
-  // Fonction utilisation ITEM
-  const useItem = function (nameItem, effectItem, indexItem) {
-    item[indexItem].qty--;
-    let qty = item[indexItem].qty;
-
-    qty == 0 ? item.splice(indexItem, 1) : null;
-
-    if (ourHealth + effectItem > ourMaxHealth) {
-      setOurHealth(ourMaxHealth);
-      setColorOurHealthBar("green");
-      setOurHealthBar(1);
-    } else {
-      setOurHealth((ourHealth) => ourHealth + effectItem);
-      updateOurHealthBar(-effectItem);
-    }
-
-    updateText(`${nameItem} vous redonne ${effectItem} PV`);
-    setHiddenButton(true);
-    attackByAdv();
-  };
-
   // Fonction VICTOIRE
-  const victoireForUs = function () {
+  const victoryForUs = function () {
     setAdvHealth(0);
     updateText(`${advName} est KO, VICTOIRE`);
     setShowPokemonAdv(false);
     setHiddenButton(true);
     setTimeout(() => {
       // VERS PAGE VICTOIRE
-      navigation.navigate("Victoire");
+      navigation.navigate("Victory");
     }, 1000);
   };
 
   // Fonction DEFAITE
-  const defeatForUs = function () {
+  const defeatForUs = function (test) {
     setOurHealth(0);
     setHiddenButton(true);
     setShowOurPokemon(false);
@@ -374,8 +299,8 @@ export default function FightPVE({ navigation, route }) {
             <View>
               <HealthBar
                 styleHealthBar={styles.advHealthBar}
-                progressHealthBar={advHealthBar}
-                colorHealthBar={colorAdvHealthBar}
+                progressHealthBar={advHealth / advMaxHealth}
+                colorHealthBar={ColorHealthBar(advHealth / advMaxHealth)}
                 widthHealthBar={100}
                 heigthHealthBar={10}
               />
@@ -428,8 +353,8 @@ export default function FightPVE({ navigation, route }) {
         {/* Notre HealthBar */}
         <HealthBar
           styleHealthBar={styles.ourHealthBar}
-          progressHealthBar={ourHealthBar}
-          colorHealthBar={colorOurHealthBar}
+          progressHealthBar={ourHealth / ourMaxHealth}
+          colorHealthBar={ColorHealthBar(ourHealth / ourMaxHealth)}
           widthHealthBar={362}
           heigthHealthBar={24}
         />
@@ -527,7 +452,7 @@ const styles = new StyleSheet.create({
   // MODAL
   modalView: {
     height: 265,
-    width: 442,
+    width: 295,
     justifyContent: "flex-start",
     marginTop: 720,
     margin: 10,
@@ -541,7 +466,7 @@ const styles = new StyleSheet.create({
   buttonModal: {
     borderRadius: 5,
     marginBottom: 7,
-    width: 440,
+    width: 280,
     padding: 5,
     elevation: 1,
     backgroundColor: "#FFCC03",
