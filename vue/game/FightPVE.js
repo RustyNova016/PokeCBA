@@ -15,64 +15,86 @@ import {
   Modal,
 } from "react-native";
 
-const mob = [
+const ourMob = [
   {
     id_model: 0,
     label: "Salameche",
-    PV: { current: 39, max: 39 },
-    attack: 52,
-    defense: 43,
-    speed: 40,
-    lvl: 1,
+    PV: { current: 99, max: 99 },
+    attack: 60,
+    defense: 55,
+    speed: 70,
+    lvl: 35,
     xp: { current: 1, max: 10000 },
     type: ["fire"],
     capacities: [
       { name: "Griffe", power: 20 },
       { name: "Flammèche", power: 40 },
     ],
+    img: require("../../images/SALAMECHE.png"),
   },
   {
     id_model: 1,
     label: "Pikachu",
-    PV: { current: 35, max: 35 },
-    attack: 55,
-    defense: 40,
-    speed: 90,
-    lvl: 1,
+    PV: { current: 80, max: 80 },
+    attack: 60,
+    defense: 50,
+    speed: 95,
+    lvl: 30,
     xp: { current: 1, max: 10000 },
     type: ["electric"],
     capacities: [
       { name: "Double Pied", power: 30 },
       { name: "Eclair", power: 40 },
     ],
+    img: require("../../images/PIKACHU.png"),
   },
   {
     id_model: 2,
-    label: "Carapuce",
-    PV: { current: 44, max: 44 },
-    attack: 48,
-    defense: 65,
-    speed: 43,
-    lvl: 9,
+    label: "Pandespiègle",
+    PV: { current: 130, max: 130 },
+    attack: 90,
+    defense: 70,
+    speed: 50,
+    lvl: 40,
     xp: { current: 1, max: 10000 },
     type: ["water"],
     capacities: [
-      { name: "Charge", power: 20 },
-      { name: "Pistolet à O", power: 40 },
+      { name: "Charge", power: 40 },
+      { name: "Plaquage", power: 85 },
     ],
+    img: require("../../images/PANDESPIEGLE.png"),
+  },
+];
+
+const advMob = [
+  {
+    id_model: 2,
+    label: "Raikou",
+    PV: { current: 140, max: 140 },
+    attack: 70,
+    defense: 60,
+    speed: 100,
+    lvl: 10,
+    xp: { current: 1, max: 10000 },
+    type: ["water"],
+    capacities: [
+      { name: "Morsure", power: 60 },
+      { name: "Eclair", power: 40 },
+    ],
+    img: require("../../images/RAIKOU.png"),
   },
 ];
 
 const item = [
   {
     name: "Potion",
-    effect: 10,
-    qty: 3,
+    effect: 20,
+    qty: 4,
   },
   {
-    name: "Mega-Potion",
-    effect: 20,
-    qty: 1,
+    name: "Super Potion",
+    effect: 50,
+    qty: 2,
   },
 ];
 
@@ -93,26 +115,26 @@ export default function FightPVE({ navigation, route }) {
   // NOTRE POKEMON
   const [numPokemon, setNumPokemon] = useState(0);
 
-  const [ourHealth, setOurHealth] = useState(mob[numPokemon].PV["current"]);
-  const [ourMaxHealth, setOurMaxHealth] = useState(mob[numPokemon].PV["max"]);
-  const [ourAttack, setOurAttack] = useState(mob[numPokemon].attack);
-  const [ourDefense, setOurDefense] = useState(mob[numPokemon].defense);
-  const [ourSpeed, setOurSpeed] = useState(mob[numPokemon].speed);
-  const [ourLevel, setOurLevel] = useState(mob[numPokemon].lvl);
-  const [ourName, setOurName] = useState(mob[numPokemon].label);
-  const [srcOurPokemon, setSrcOurPokemon] = useState(
-    require("../../images/SALAMECHE.png")
+  const [ourHealth, setOurHealth] = useState(ourMob[numPokemon].PV["current"]);
+  const [ourMaxHealth, setOurMaxHealth] = useState(
+    ourMob[numPokemon].PV["max"]
   );
+  const [ourAttack, setOurAttack] = useState(ourMob[numPokemon].attack);
+  const [ourDefense, setOurDefense] = useState(ourMob[numPokemon].defense);
+  const [ourSpeed, setOurSpeed] = useState(ourMob[numPokemon].speed);
+  const [ourLevel, setOurLevel] = useState(ourMob[numPokemon].lvl);
+  const [ourName, setOurName] = useState(ourMob[numPokemon].label);
+  const [srcOurPokemon, setSrcOurPokemon] = useState(ourMob[numPokemon].img);
 
   //  POKEMON ADVERSE
-  const [advHealth, setAdvHealth] = useState(mob[2].PV["current"]);
-  const [advMaxHealth] = useState(mob[2].PV["max"]);
-  const [advAttack, setAdvAttack] = useState(mob[2].attack);
-  const [advDefense, setAdvDefense] = useState(mob[2].defense);
-  const [advSpeed, setAdvSpeed] = useState(mob[2].speed);
-  const [advLevel, setAdvLevel] = useState(mob[2].lvl);
-  const [advName, setAdvName] = useState(mob[2].label);
-  const [srcAdvPokemon] = useState(require(`../../images/CARAPUCE.png`));
+  const [advHealth, setAdvHealth] = useState(advMob[0].PV["current"]);
+  const [advMaxHealth] = useState(advMob[0].PV["max"]);
+  const [advAttack, setAdvAttack] = useState(advMob[0].attack);
+  const [advDefense, setAdvDefense] = useState(advMob[0].defense);
+  const [advSpeed, setAdvSpeed] = useState(advMob[0].speed);
+  const [advLevel, setAdvLevel] = useState(advMob[0].lvl);
+  const [advName, setAdvName] = useState(advMob[0].label);
+  const [srcAdvPokemon] = useState(advMob[0].img);
 
   // VARIABLE TEXT BOX
   const [textBox, setTextBox] = useState([
@@ -122,26 +144,32 @@ export default function FightPVE({ navigation, route }) {
   // VARIABLE INUTILE POUR MAJ TEXTBOX
   const [majTextBox, setMajTextBox] = useState(0);
 
-  // VARIABLES AFFICHAGE ET ANIMATION
+  // VARIABLES AFFICHAGE MODAL ET ANIMATION
   const [hiddenButton, setHiddenButton] = useState(true);
+  const [hiddenButtonRetour, setHiddenButonRetour] = useState(false);
+
   const [showModalAttack, setShowModalAttack] = useState(false);
   const [showModalBag, setShowModalBag] = useState(false);
+  const [showModalPokemon, setShowModalPokemon] = useState(false);
+
   const [ourAnimation, setOurAnimation] = useState(0);
   const [advAnimation, setAdvAnimation] = useState(0);
 
   useEffect(() => {
+    // PEUT ON ATTENDRE AFFECTATION AVANT DE CONTINUER ????????
     setTimeout(() => {
       // ON INITIALISE LES VARIABLES DE NOTRE POKEMON
-      setOurHealth(mob[numPokemon].PV["max"]);
-      setOurMaxHealth(mob[numPokemon].PV["max"]);
-      setOurAttack(mob[numPokemon].attack);
-      setOurDefense(mob[numPokemon].defense);
-      setOurSpeed(mob[numPokemon].speed);
-      setOurLevel(mob[numPokemon].lvl);
-      setOurName(mob[numPokemon].label);
+      setOurHealth(ourMob[numPokemon].PV["current"]);
+      setOurMaxHealth(ourMob[numPokemon].PV["max"]);
+      setOurAttack(ourMob[numPokemon].attack);
+      setOurDefense(ourMob[numPokemon].defense);
+      setOurSpeed(ourMob[numPokemon].speed);
+      setOurLevel(ourMob[numPokemon].lvl);
+      setOurName(ourMob[numPokemon].label);
+      setSrcOurPokemon(ourMob[numPokemon].img);
 
       // Animation de départ
-      updateText(`${mob[numPokemon].label} GO !`);
+      updateText(`${ourMob[numPokemon].label} GO !`);
       setShowTrainer(false);
       setShowOurPokemon(true);
     }, 2000);
@@ -150,22 +178,22 @@ export default function FightPVE({ navigation, route }) {
     setTimeout(() => {
       setHiddenButton(false);
 
-      mob[numPokemon].speed < advSpeed
+      ourMob[numPokemon].speed < advSpeed
         ? (updateText(`${advName} est rapide, il attaque en premier`),
           setHiddenButton(true),
           attackByAdv())
-        : null;
-    }, 3000);
+        : updateText(`Que fais t-on ?`);
+    }, 2000);
   }, [numPokemon]);
 
   // Fonction d'attaque par l'ADVERSAIRE
   const attackByAdv = function (effectItem) {
     // On choisit une attaque au hasard dans les capacités du Pokémon
     let numAdvAttack = Math.round(
-      Math.random() * (mob[2].capacities.length - 1)
+      Math.random() * (advMob[0].capacities.length - 1)
     );
-    let nameAdvAttack = mob[2].capacities[numAdvAttack].name;
-    let powerAdvAttack = mob[2].capacities[numAdvAttack].power;
+    let nameAdvAttack = advMob[0].capacities[numAdvAttack].name;
+    let powerAdvAttack = advMob[0].capacities[numAdvAttack].power;
 
     // Appel de la fonction : Calcul dégats et définition du texte
     let result = CalculateDamage(
@@ -173,8 +201,8 @@ export default function FightPVE({ navigation, route }) {
       advAttack,
       nameAdvAttack,
       powerAdvAttack,
-      ourDefense,
-      ourName
+      ourMob[numPokemon].defense, // On appelle de cette manière
+      ourMob[numPokemon].label   // pour être sur d'avoir les bonnes valeurs
     );
 
     // On récupére les résultats de la fonction
@@ -191,7 +219,7 @@ export default function FightPVE({ navigation, route }) {
           updateText(text),
           setAdvAnimation(advAnimation + 1),
           setHiddenButton(false))
-        : (updateText(text), defeatForUs());
+        : (updateText(text), setAdvAnimation(advAnimation + 1), defeatForUs());
     }, 1500);
   };
 
@@ -248,6 +276,25 @@ export default function FightPVE({ navigation, route }) {
     attackByAdv(effectItem);
   };
 
+  // Fonction changement de Pokemon
+  const changeOurPokemon = function (index) {
+    // On ré-affiche le bouton RETOUR dans la modal Pokemon
+    setHiddenButonRetour(false);
+
+    // On affecte la vie actuelle à notre Pokemon
+    ourMob[numPokemon].PV["current"] = ourHealth;
+
+    // On rappelle notre Pokémon
+    setShowOurPokemon(false);
+    setShowTrainer(true);
+
+    // MaJ TextBox
+    updateText(`${ourName} reviens !`);
+
+    // On change de Pokémon et on rappelle le UseEffect
+    setNumPokemon(index);
+  };
+
   // Fonction de MAJ de la TextBox
   const updateText = function (text) {
     textBox.unshift(text);
@@ -262,12 +309,14 @@ export default function FightPVE({ navigation, route }) {
   const victoryForUs = function () {
     setAdvHealth(0);
     updateText(`${advName} est KO, VICTOIRE`);
-    setShowPokemonAdv(false);
     setHiddenButton(true);
+    setTimeout(() => {
+      setShowPokemonAdv(false);
+    }, 1000);
     setTimeout(() => {
       // VERS PAGE VICTOIRE
       navigation.navigate("Victory");
-    }, 1000);
+    }, 1500);
   };
 
   // Fonction DEFAITE
@@ -275,17 +324,29 @@ export default function FightPVE({ navigation, route }) {
     setOurHealth(0);
     setHiddenButton(true);
     setShowOurPokemon(false);
-    if (numPokemon == 1) {
+
+    // On cache le bouton RETOUR dans la modal Pokemon
+
+    setHiddenButonRetour(true);
+
+    let allDead = 0;
+
+    for (let i = 0; i < ourMob.length; i++) {
+      ourMob[i].PV["current"] == 0 ? allDead++ : null;
+    }
+    console.log(allDead);
+
+    if (allDead == 2) {
+      updateText(`Tout vos Pokémons sont KO ...`);
       setTimeout(() => {
         // VERS PAGE DEFAITE
         navigation.navigate("Defeat");
       }, 2000);
     } else {
-      setNumPokemon((numPokemon) => numPokemon + 1);
-      setSrcOurPokemon(require("../../images/PIKACHU.png"));
+      setShowModalPokemon(true);
       setTimeout(() => {
+        ourMob[numPokemon].PV["current"] = 0;
         updateText(`${ourName} est KO`);
-        setShowTrainer(true);
       }, 1000);
     }
   };
@@ -347,6 +408,12 @@ export default function FightPVE({ navigation, route }) {
             >
               <Text style={styles.pixelPolice}>SAC</Text>
             </Pressable>
+            <Pressable
+              style={styles.buttonPokemon}
+              onPress={() => setShowModalPokemon(!showModalPokemon)}
+            >
+              <Text style={styles.pixelPolice}>POKéMON</Text>
+            </Pressable>
           </View>
         )}
 
@@ -372,7 +439,7 @@ export default function FightPVE({ navigation, route }) {
         >
           <View>
             <View style={styles.modalView}>
-              {mob[numPokemon].capacities.map((el) => {
+              {ourMob[numPokemon].capacities.map((el) => {
                 return (
                   <Pressable
                     style={styles.buttonModal}
@@ -416,7 +483,7 @@ export default function FightPVE({ navigation, route }) {
                     }}
                   >
                     <Text style={styles.textModal}>
-                      {el.name} x{el.qty}
+                      {el.name} (+{el.effect}PV) x{el.qty}
                     </Text>
                   </Pressable>
                 );
@@ -429,6 +496,47 @@ export default function FightPVE({ navigation, route }) {
               >
                 <Text style={styles.textModal}>RETOUR</Text>
               </Pressable>
+            </View>
+          </View>
+        </Modal>
+
+        {/* Modal pour les Pokemon */}
+        <Modal
+          animationType="slide"
+          visible={showModalPokemon}
+          transparent={true}
+          onRequestClose={() => setShowModalPokemon(!showModalPokemon)}
+        >
+          <View>
+            <View style={styles.modalView}>
+              {ourMob.map((el, index) => {
+                if (el.PV["current"] != 0 && index != numPokemon) {
+                  return (
+                    <Pressable
+                      style={styles.buttonModal}
+                      onPress={() => {
+                        changeOurPokemon(index);
+                        setShowModalPokemon(!showModalPokemon);
+                      }}
+                    >
+                      <Text style={styles.textModal}>
+                        {el.label} - {el.PV["current"]}/{el.PV["max"]}PV
+                      </Text>
+                    </Pressable>
+                  );
+                }
+              })}
+              {!hiddenButtonRetour && (
+                <Pressable
+                  style={styles.buttonModal}
+                  onPress={() => {
+                    setShowModalPokemon(!showModalPokemon),
+                      setHiddenButton(false);
+                  }}
+                >
+                  <Text style={styles.textModal}>RETOUR</Text>
+                </Pressable>
+              )}
             </View>
           </View>
         </Modal>
@@ -484,11 +592,11 @@ const styles = new StyleSheet.create({
 
   imgAdvPokemon: {
     width: "100%",
-    height: 100,
+    height: 200,
     resizeMode: "contain",
     position: "absolute",
-    top: -100,
-    left: 150,
+    top: -180,
+    left: 120,
   },
 
   imgOurPokemon: {
@@ -496,7 +604,7 @@ const styles = new StyleSheet.create({
     height: 120,
     resizeMode: "contain",
     position: "absolute",
-    top: 0,
+    top: 40,
     left: -150,
   },
 
@@ -538,16 +646,16 @@ const styles = new StyleSheet.create({
 
   advHealth: {
     position: "absolute",
-    top: -125,
-    left: 352,
+    top: -175,
+    left: 336,
     fontFamily: "SHPinscher",
     color: "#1F0F42",
   },
 
   advMaxHealth: {
     position: "absolute",
-    top: -125,
-    left: 376,
+    top: -175,
+    left: 363,
     fontFamily: "SHPinscher",
     color: "#1F0F42",
   },
@@ -569,6 +677,14 @@ const styles = new StyleSheet.create({
     width: 150,
   },
 
+  buttonPokemon: {
+    position: "absolute",
+    top: 348,
+    left: 358,
+    height: 35,
+    width: 150,
+  },
+
   // HEALTHBAR
   ourHealthBar: {
     position: "absolute",
@@ -579,8 +695,8 @@ const styles = new StyleSheet.create({
 
   advHealthBar: {
     position: "absolute",
-    top: -120,
-    left: 320,
+    top: -170,
+    left: 310,
     borderRadius: 5,
   },
 });
