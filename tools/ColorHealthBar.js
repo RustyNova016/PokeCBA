@@ -1,6 +1,6 @@
 export function ColorHealthBar(value) {
   if (value > 0.75) {
-    return "purple";
+    return "green";
   } else if (value <= 0.25) {
     return "red";
   } else if (value <= 0.5) {
