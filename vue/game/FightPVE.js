@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import HealthBar from "../../components/HealthBar/HealthBar";
 import { CalculateDamage } from "../../tools/CalculateDamage.js";
 import { ColorHealthBar } from "../../tools/ColorHealthBar";
@@ -74,7 +74,7 @@ const advMob = [
     attack: 70,
     defense: 60,
     speed: 100,
-    lvl: 10,
+    lvl: 50,
     xp: { current: 1, max: 10000 },
     type: ["water"],
     capacities: [
@@ -145,46 +145,46 @@ export default function FightPVE({ navigation, route }) {
   const [majTextBox, setMajTextBox] = useState(0);
 
   // VARIABLES AFFICHAGE MODAL ET ANIMATION
-  const [hiddenButton, setHiddenButton] = useState(true);
+  const [hiddenButtonOfMenu, setHiddenButtonOfMenu] = useState(true);
   const [hiddenButtonRetour, setHiddenButonRetour] = useState(false);
 
   const [showModalAttack, setShowModalAttack] = useState(false);
   const [showModalBag, setShowModalBag] = useState(false);
   const [showModalPokemon, setShowModalPokemon] = useState(false);
-
   const [ourAnimation, setOurAnimation] = useState(0);
   const [advAnimation, setAdvAnimation] = useState(0);
 
   useEffect(() => {
-    // PEUT ON ATTENDRE AFFECTATION AVANT DE CONTINUER ????????
-    setTimeout(() => {
-      // ON INITIALISE LES VARIABLES DE NOTRE POKEMON
-      setOurHealth(ourMob[numPokemon].PV["current"]);
-      setOurMaxHealth(ourMob[numPokemon].PV["max"]);
-      setOurAttack(ourMob[numPokemon].attack);
-      setOurDefense(ourMob[numPokemon].defense);
-      setOurSpeed(ourMob[numPokemon].speed);
-      setOurLevel(ourMob[numPokemon].lvl);
-      setOurName(ourMob[numPokemon].label);
-      setSrcOurPokemon(ourMob[numPokemon].img);
+    // ON INITIALISE LES VARIABLES DE NOTRE POKEMON
+    setOurHealth(ourMob[numPokemon].PV["current"]);
+    setOurMaxHealth(ourMob[numPokemon].PV["max"]);
+    setOurAttack(ourMob[numPokemon].attack);
+    setOurDefense(ourMob[numPokemon].defense);
+    setOurSpeed(ourMob[numPokemon].speed);
+    setOurLevel(ourMob[numPokemon].lvl);
+    setSrcOurPokemon(ourMob[numPokemon].img);
+    setOurName(ourMob[numPokemon].label);
 
+    // ON VERIFIE L'INITIALISATION DE NOS VARIABLES
+    if (ourName) {
       // Animation de départ
-      updateText(`${ourMob[numPokemon].label} GO !`);
-      setShowTrainer(false);
-      setShowOurPokemon(true);
-    }, 2000);
+      setTimeout(() => {
+        updateTextBox(`${ourName} GO !`);
+        setShowTrainer(false);
+        setShowOurPokemon(true);
+      }, 2000);
 
-    // Test de vitesse pour savoir qui attaque en premier
-    setTimeout(() => {
-      setHiddenButton(false);
-
-      ourMob[numPokemon].speed < advSpeed
-        ? (updateText(`${advName} est rapide, il attaque en premier`),
-          setHiddenButton(true),
-          attackByAdv())
-        : updateText(`Que fais t-on ?`);
-    }, 2000);
-  }, [numPokemon]);
+      setTimeout(() => {
+        setHiddenButtonOfMenu(false);
+        // Test de vitesse pour savoir qui attaque en premier
+        ourSpeed < advSpeed
+          ? (updateTextBox(`${advName} est rapide, il attaque en premier`),
+            setHiddenButtonOfMenu(true),
+            attackByAdv())
+          : updateTextBox(`Que fais t-on ?`);
+      }, 4000);
+    }
+  }, [ourName, numPokemon]);
 
   // Fonction d'attaque par l'ADVERSAIRE
   const attackByAdv = function (effectItem) {
@@ -201,8 +201,8 @@ export default function FightPVE({ navigation, route }) {
       advAttack,
       nameAdvAttack,
       powerAdvAttack,
-      ourMob[numPokemon].defense, // On appelle de cette manière
-      ourMob[numPokemon].label   // pour être sur d'avoir les bonnes valeurs
+      ourDefense,
+      ourName
     );
 
     // On récupére les résultats de la fonction
@@ -216,17 +216,19 @@ export default function FightPVE({ navigation, route }) {
     setTimeout(() => {
       ourHealth + effectItem - damage > 0
         ? (setOurHealth((ourHealth) => ourHealth - damage),
-          updateText(text),
+          updateTextBox(text),
           setAdvAnimation(advAnimation + 1),
-          setHiddenButton(false))
-        : (updateText(text), setAdvAnimation(advAnimation + 1), defeatForUs());
+          setHiddenButtonOfMenu(false))
+        : (updateTextBox(text),
+          setAdvAnimation(advAnimation + 1),
+          maybeDefeatForUs());
     }, 1500);
   };
 
   // Fonction d'attaque par NOUS
   const attackByOur = function (nameOurAttack, powerOurAttack) {
     // Desactivation bouton Attaquer
-    setHiddenButton(true);
+    setHiddenButtonOfMenu(true);
 
     // Appel de la fonction : Calcul dégats et définition du texte
     let result = CalculateDamage(
@@ -244,16 +246,16 @@ export default function FightPVE({ navigation, route }) {
 
     // On réaffecte les différentes variables
     setAdvHealth((advHealth) => advHealth - damage);
-    updateText(text);
+    updateTextBox(text);
     setOurAnimation(ourAnimation + 1);
-    setHiddenButton(true);
+    setHiddenButtonOfMenu(true);
     advHealth - damage <= 0 ? victoryForUs() : attackByAdv();
   };
 
   // Fonction utilisation ITEM
   const useItem = function (nameItem, effectItem, indexItem) {
     // On cache les boutons du Menu
-    setHiddenButton(true);
+    setHiddenButtonOfMenu(true);
 
     // On enleve une quantité de l'objet dans notre inventaire
     item[indexItem].qty--;
@@ -270,7 +272,7 @@ export default function FightPVE({ navigation, route }) {
     }
 
     // On mets à jour la textBox
-    updateText(`${nameItem} vous redonne ${effectItem} PV`);
+    updateTextBox(`${nameItem} vous redonne ${effectItem} PV`);
 
     // Appel fonction d'attaque adverse avec l'effet de l'item pour vérification
     attackByAdv(effectItem);
@@ -289,14 +291,19 @@ export default function FightPVE({ navigation, route }) {
     setShowTrainer(true);
 
     // MaJ TextBox
-    updateText(`${ourName} reviens !`);
+    if (ourHealth != 0) {
+      updateTextBox(`${ourName} reviens !`);
+    }
 
     // On change de Pokémon et on rappelle le UseEffect
     setNumPokemon(index);
+
+    // On remet en undefined la variable ourName pour vérification au départ
+    setOurName();
   };
 
   // Fonction de MAJ de la TextBox
-  const updateText = function (text) {
+  const updateTextBox = function (text) {
     textBox.unshift(text);
     if (textBox.length > 10) {
       textBox.length = 10;
@@ -308,25 +315,24 @@ export default function FightPVE({ navigation, route }) {
   // Fonction VICTOIRE
   const victoryForUs = function () {
     setAdvHealth(0);
-    updateText(`${advName} est KO, VICTOIRE`);
-    setHiddenButton(true);
+    updateTextBox(`${advName} est KO, VICTOIRE`);
+    setHiddenButtonOfMenu(true);
     setTimeout(() => {
       setShowPokemonAdv(false);
-    }, 1000);
+    }, 2000);
     setTimeout(() => {
       // VERS PAGE VICTOIRE
       navigation.navigate("Victory");
-    }, 1500);
+    }, 3000);
   };
 
   // Fonction DEFAITE
-  const defeatForUs = function (test) {
+  const maybeDefeatForUs = function (test) {
     setOurHealth(0);
-    setHiddenButton(true);
+    setHiddenButtonOfMenu(true);
     setShowOurPokemon(false);
 
     // On cache le bouton RETOUR dans la modal Pokemon
-
     setHiddenButonRetour(true);
 
     let allDead = 0;
@@ -334,20 +340,19 @@ export default function FightPVE({ navigation, route }) {
     for (let i = 0; i < ourMob.length; i++) {
       ourMob[i].PV["current"] == 0 ? allDead++ : null;
     }
-    console.log(allDead);
 
     if (allDead == 2) {
-      updateText(`Tout vos Pokémons sont KO ...`);
+      updateTextBox(`Tout vos Pokémons sont KO ...`);
       setTimeout(() => {
         // VERS PAGE DEFAITE
         navigation.navigate("Defeat");
       }, 2000);
     } else {
-      setShowModalPokemon(true);
+      ourMob[numPokemon].PV["current"] = 0;
+      updateTextBox(`${ourName} est KO`);
       setTimeout(() => {
-        ourMob[numPokemon].PV["current"] = 0;
-        updateText(`${ourName} est KO`);
-      }, 1000);
+        setShowModalPokemon(true);
+      }, 2000);
     }
   };
 
@@ -394,7 +399,7 @@ export default function FightPVE({ navigation, route }) {
         </View>
 
         {/* Bouttons */}
-        {!hiddenButton && (
+        {!hiddenButtonOfMenu && (
           <View>
             <Pressable
               style={styles.buttonAttack}
@@ -422,8 +427,8 @@ export default function FightPVE({ navigation, route }) {
           styleHealthBar={styles.ourHealthBar}
           progressHealthBar={ourHealth / ourMaxHealth}
           colorHealthBar={ColorHealthBar(ourHealth / ourMaxHealth)}
-          widthHealthBar={362}
-          heigthHealthBar={24}
+          widthHealthBar={363}
+          heigthHealthBar={25}
         />
 
         {/* Affichage Notre Vie */}
@@ -531,7 +536,7 @@ export default function FightPVE({ navigation, route }) {
                   style={styles.buttonModal}
                   onPress={() => {
                     setShowModalPokemon(!showModalPokemon),
-                      setHiddenButton(false);
+                      setHiddenButtonOfMenu(false);
                   }}
                 >
                   <Text style={styles.textModal}>RETOUR</Text>
@@ -688,7 +693,7 @@ const styles = new StyleSheet.create({
   // HEALTHBAR
   ourHealthBar: {
     position: "absolute",
-    top: 728,
+    top: 727,
     left: 16,
     borderRadius: 5,
   },
