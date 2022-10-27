@@ -1,9 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
+
 import HealthBar from "../../components/HealthBar/HealthBar";
 import { CalculateDamage } from "../../tools/CalculateDamage.js";
 import { ColorHealthBar } from "../../tools/ColorHealthBar";
 import { StyleSheet } from "react-native";
 import { Shake } from "react-native-motion";
+
+import { advMob } from "../../classes/advMob";
+import { ourMob } from "../../classes/ourMob";
+import { item } from "../../classes/item";
+
 import * as constClass from "../../Constants.js";
 
 import {
@@ -14,89 +20,6 @@ import {
   Pressable,
   Modal,
 } from "react-native";
-
-const ourMob = [
-  {
-    id_model: 0,
-    label: "Salameche",
-    PV: { current: 99, max: 99 },
-    attack: 60,
-    defense: 55,
-    speed: 70,
-    lvl: 35,
-    xp: { current: 1, max: 10000 },
-    type: ["fire"],
-    capacities: [
-      { name: "Griffe", power: 20 },
-      { name: "Flammèche", power: 40 },
-    ],
-    img: require("../../images/SALAMECHE.png"),
-  },
-  {
-    id_model: 1,
-    label: "Pikachu",
-    PV: { current: 80, max: 80 },
-    attack: 60,
-    defense: 50,
-    speed: 95,
-    lvl: 30,
-    xp: { current: 1, max: 10000 },
-    type: ["electric"],
-    capacities: [
-      { name: "Double Pied", power: 30 },
-      { name: "Eclair", power: 40 },
-    ],
-    img: require("../../images/PIKACHU.png"),
-  },
-  {
-    id_model: 2,
-    label: "Pandespiègle",
-    PV: { current: 130, max: 130 },
-    attack: 90,
-    defense: 70,
-    speed: 50,
-    lvl: 40,
-    xp: { current: 1, max: 10000 },
-    type: ["water"],
-    capacities: [
-      { name: "Charge", power: 40 },
-      { name: "Plaquage", power: 85 },
-    ],
-    img: require("../../images/PANDESPIEGLE.png"),
-  },
-];
-
-const advMob = [
-  {
-    id_model: 2,
-    label: "Raikou",
-    PV: { current: 140, max: 140 },
-    attack: 70,
-    defense: 60,
-    speed: 100,
-    lvl: 50,
-    xp: { current: 1, max: 10000 },
-    type: ["water"],
-    capacities: [
-      { name: "Morsure", power: 60 },
-      { name: "Eclair", power: 40 },
-    ],
-    img: require("../../images/RAIKOU.png"),
-  },
-];
-
-const item = [
-  {
-    name: "Potion",
-    effect: 20,
-    qty: 4,
-  },
-  {
-    name: "Super Potion",
-    effect: 50,
-    qty: 2,
-  },
-];
 
 export default function FightPVE({ navigation, route }) {
   // VARIABLES POUR LES IMAGES
@@ -138,7 +61,7 @@ export default function FightPVE({ navigation, route }) {
 
   // VARIABLE TEXT BOX
   const [textBox, setTextBox] = useState([
-    `Un ${advName} sauvage, niveau ${advLevel} apparait`,
+    `Un ${advName} niveau ${advLevel} apparait`,
   ]);
 
   // VARIABLE INUTILE POUR MAJ TEXTBOX
@@ -162,8 +85,8 @@ export default function FightPVE({ navigation, route }) {
     setOurDefense(ourMob[numPokemon].defense);
     setOurSpeed(ourMob[numPokemon].speed);
     setOurLevel(ourMob[numPokemon].lvl);
-    setSrcOurPokemon(ourMob[numPokemon].img);
     setOurName(ourMob[numPokemon].label);
+    setSrcOurPokemon(ourMob[numPokemon].img);
 
     // ON VERIFIE L'INITIALISATION DE NOS VARIABLES
     if (ourName) {

@@ -1,0 +1,51 @@
+export const ourMob = [
+  {
+    id_model: 0,
+    label: "Salameche",
+    PV: { current: 99, max: 99 },
+    attack: 60,
+    defense: 55,
+    speed: 70,
+    lvl: 35,
+    xp: { current: 1, max: 10000 },
+    type: ["fire"],
+    capacities: [
+      { name: "Griffe", power: 20 },
+      { name: "Flammèche", power: 40 },
+    ],
+    img: require("./../images/SALAMECHE.png"),
+  },
+  {
+    id_model: 1,
+    label: "Pikachu",
+    PV: { current: 80, max: 80 },
+    attack: 60,
+    defense: 50,
+    speed: 95,
+    lvl: 30,
+    xp: { current: 1, max: 10000 },
+    type: ["electric"],
+    capacities: [
+      { name: "Double Pied", power: 30 },
+      { name: "Eclair", power: 40 },
+    ],
+    img: require("./../images/PIKACHU.png"),
+  },
+
+  {
+    id_model: 2,
+    label: "Pandespiegle",
+    PV: { current: 130, max: 130 },
+    attack: 90,
+    defense: 70,
+    speed: 50,
+    lvl: 40,
+    xp: { current: 1, max: 10000 },
+    type: ["water"],
+    capacities: [
+      { name: "Charge", power: 40 },
+      { name: "Plaquage", power: 85 },
+    ],
+    img: require("./../images/PANDESPIEGLE.png"),
+  },
+];
