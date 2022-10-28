@@ -37,8 +37,8 @@ export default function FightPVE({ navigation, route }) {
 
   // NOTRE POKEMON
   const [numOurPokemon, setNumOurPokemon] = useState(0);
-  const [numAdvPokemon] = useState(
-    Math.round(Math.random() * (advMob.length - 1))
+  const [numAdvPokemon] = useState(0
+   // Math.round(Math.random() * (advMob.length - 1))
   );
 
   const [ourHealth, setOurHealth] = useState(
