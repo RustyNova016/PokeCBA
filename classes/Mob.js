@@ -37,7 +37,7 @@ export class Mob {
     /**
      * @param {MobJSONFormat} json
      */
-    fromJSON(json){
+    fromJSON(json) {
         const abilities = [];
 
         // Convert the abilities
@@ -66,7 +66,27 @@ export class Mob {
      * @param {MobModel} mobModel
      * @param {string} nickname
      */
-    createNewMob(mobModel, nickname){
+    createNewMob(mobModel, nickname) {
         return new Mob(null, mobModel.idMobModel, nickname, mobModel.HP, mobModel.HP, mobModel.attack, mobModel.defense, mobModel.speed, mobModel.img, mobModel.abilities, 0, null)
+    }
+
+    /** Export to JSON
+     * @return {MobJSONFormat}
+     */
+    toJSON() {
+        return {
+            idMob: this.idMob,
+            idModel: this.idModel,
+            nickname: this.nickname,
+            HP: this.HP,
+            HPMax: this.HPMax,
+            attack: this.attack,
+            defence: this.defence,
+            speed: this.speed,
+            img: this.img,
+            abilities: this.abilities,
+            XP: this.XP,
+            idItem: this.idItem
+        }
     }
 }

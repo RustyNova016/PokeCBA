@@ -14,6 +14,8 @@ const styles = new StyleSheet.create({
         display: "flex",
         backgroundColor: "#f8abb8",
         width: "auto",
-        height: "auto"
+        height: "auto",
+        borderColor: "#000000",
+        borderStyle: "solid"
     }
 })
