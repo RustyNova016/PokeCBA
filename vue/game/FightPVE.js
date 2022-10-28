@@ -36,28 +36,37 @@ export default function FightPVE({ navigation, route }) {
   // VARIABLES POUR LES POKEMONS
 
   // NOTRE POKEMON
-  const [numPokemon, setNumPokemon] = useState(0);
-
-  const [ourHealth, setOurHealth] = useState(ourMob[numPokemon].PV["current"]);
-  const [ourMaxHealth, setOurMaxHealth] = useState(
-    ourMob[numPokemon].PV["max"]
+  const [numOurPokemon, setNumOurPokemon] = useState(0);
+  const [numAdvPokemon] = useState(
+    Math.round(Math.random() * (advMob.length - 1))
   );
-  const [ourAttack, setOurAttack] = useState(ourMob[numPokemon].attack);
-  const [ourDefense, setOurDefense] = useState(ourMob[numPokemon].defense);
-  const [ourSpeed, setOurSpeed] = useState(ourMob[numPokemon].speed);
-  const [ourLevel, setOurLevel] = useState(ourMob[numPokemon].lvl);
-  const [ourName, setOurName] = useState(ourMob[numPokemon].label);
-  const [srcOurPokemon, setSrcOurPokemon] = useState(ourMob[numPokemon].img);
+
+  const [ourHealth, setOurHealth] = useState(
+    ourMob[numOurPokemon].PV["current"]
+  );
+  const [ourMaxHealth, setOurMaxHealth] = useState(
+    ourMob[numOurPokemon].PV["max"]
+  );
+  const [ourAttack, setOurAttack] = useState(ourMob[numOurPokemon].attack);
+  const [ourDefense, setOurDefense] = useState(ourMob[numOurPokemon].defense);
+  const [ourSpeed, setOurSpeed] = useState(ourMob[numOurPokemon].speed);
+  const [ourLevel, setOurLevel] = useState(ourMob[numOurPokemon].lvl);
+  const [ourName, setOurName] = useState(ourMob[numOurPokemon].label);
+  const [srcOurPokemon, setSrcOurPokemon] = useState(ourMob[numOurPokemon].img);
+  const [ourType, setOurType] = useState(ourMob[numOurPokemon].type);
 
   //  POKEMON ADVERSE
-  const [advHealth, setAdvHealth] = useState(advMob[0].PV["current"]);
-  const [advMaxHealth] = useState(advMob[0].PV["max"]);
-  const [advAttack, setAdvAttack] = useState(advMob[0].attack);
-  const [advDefense, setAdvDefense] = useState(advMob[0].defense);
-  const [advSpeed, setAdvSpeed] = useState(advMob[0].speed);
-  const [advLevel, setAdvLevel] = useState(advMob[0].lvl);
-  const [advName, setAdvName] = useState(advMob[0].label);
-  const [srcAdvPokemon] = useState(advMob[0].img);
+  const [advHealth, setAdvHealth] = useState(
+    advMob[numAdvPokemon].PV["current"]
+  );
+  const [advMaxHealth] = useState(advMob[numAdvPokemon].PV["max"]);
+  const [advAttack, setAdvAttack] = useState(advMob[numAdvPokemon].attack);
+  const [advDefense, setAdvDefense] = useState(advMob[numAdvPokemon].defense);
+  const [advSpeed, setAdvSpeed] = useState(advMob[numAdvPokemon].speed);
+  const [advLevel, setAdvLevel] = useState(advMob[numAdvPokemon].lvl);
+  const [advName, setAdvName] = useState(advMob[numAdvPokemon].label);
+  const [srcAdvPokemon] = useState(advMob[numAdvPokemon].img);
+  const [advType, setAdvType] = useState(advMob[numAdvPokemon].type);
 
   // VARIABLE TEXT BOX
   const [textBox, setTextBox] = useState([
@@ -79,14 +88,15 @@ export default function FightPVE({ navigation, route }) {
 
   useEffect(() => {
     // ON INITIALISE LES VARIABLES DE NOTRE POKEMON
-    setOurHealth(ourMob[numPokemon].PV["current"]);
-    setOurMaxHealth(ourMob[numPokemon].PV["max"]);
-    setOurAttack(ourMob[numPokemon].attack);
-    setOurDefense(ourMob[numPokemon].defense);
-    setOurSpeed(ourMob[numPokemon].speed);
-    setOurLevel(ourMob[numPokemon].lvl);
-    setOurName(ourMob[numPokemon].label);
-    setSrcOurPokemon(ourMob[numPokemon].img);
+    setOurHealth(ourMob[numOurPokemon].PV["current"]);
+    setOurMaxHealth(ourMob[numOurPokemon].PV["max"]);
+    setOurAttack(ourMob[numOurPokemon].attack);
+    setOurDefense(ourMob[numOurPokemon].defense);
+    setOurSpeed(ourMob[numOurPokemon].speed);
+    setOurLevel(ourMob[numOurPokemon].lvl);
+    setOurName(ourMob[numOurPokemon].label);
+    setSrcOurPokemon(ourMob[numOurPokemon].img);
+    setOurType(ourMob[numOurPokemon].type);
 
     // ON VERIFIE L'INITIALISATION DE NOS VARIABLES
     if (ourName) {
@@ -107,7 +117,7 @@ export default function FightPVE({ navigation, route }) {
           : updateTextBox(`Que fais t-on ?`);
       }, 4000);
     }
-  }, [ourName, numPokemon]);
+  }, [ourName, numOurPokemon]);
 
   // Fonction d'attaque par l'ADVERSAIRE
   const attackByAdv = function (effectItem) {
@@ -115,8 +125,10 @@ export default function FightPVE({ navigation, route }) {
     let numAdvAttack = Math.round(
       Math.random() * (advMob[0].capacities.length - 1)
     );
-    let nameAdvAttack = advMob[0].capacities[numAdvAttack].name;
-    let powerAdvAttack = advMob[0].capacities[numAdvAttack].power;
+
+    let nameAdvAttack = advMob[numAdvPokemon].capacities[numAdvAttack].name;
+    let powerAdvAttack = advMob[numAdvPokemon].capacities[numAdvAttack].power;
+    let typeAdvAttack = advMob[numAdvPokemon].capacities[numAdvAttack].type;
 
     // Appel de la fonction : Calcul dégats et définition du texte
     let result = CalculateDamage(
@@ -124,7 +136,9 @@ export default function FightPVE({ navigation, route }) {
       advAttack,
       nameAdvAttack,
       powerAdvAttack,
+      typeAdvAttack,
       ourDefense,
+      ourType,
       ourName
     );
 
@@ -145,11 +159,11 @@ export default function FightPVE({ navigation, route }) {
         : (updateTextBox(text),
           setAdvAnimation(advAnimation + 1),
           maybeDefeatForUs());
-    }, 1500);
+    }, 1000);
   };
 
   // Fonction d'attaque par NOUS
-  const attackByOur = function (nameOurAttack, powerOurAttack) {
+  const attackByOur = function (nameOurAttack, powerOurAttack, typeOurAttack) {
     // Desactivation bouton Attaquer
     setHiddenButtonOfMenu(true);
 
@@ -159,7 +173,9 @@ export default function FightPVE({ navigation, route }) {
       ourAttack,
       nameOurAttack,
       powerOurAttack,
+      typeOurAttack,
       advDefense,
+      advType,
       advName
     );
 
@@ -207,7 +223,7 @@ export default function FightPVE({ navigation, route }) {
     setHiddenButonRetour(false);
 
     // On affecte la vie actuelle à notre Pokemon
-    ourMob[numPokemon].PV["current"] = ourHealth;
+    ourMob[numOurPokemon].PV["current"] = ourHealth;
 
     // On rappelle notre Pokémon
     setShowOurPokemon(false);
@@ -219,7 +235,7 @@ export default function FightPVE({ navigation, route }) {
     }
 
     // On change de Pokémon et on rappelle le UseEffect
-    setNumPokemon(index);
+    setNumOurPokemon(index);
 
     // On remet en undefined la variable ourName pour vérification au départ
     setOurName();
@@ -271,7 +287,7 @@ export default function FightPVE({ navigation, route }) {
         navigation.navigate("Defeat");
       }, 2000);
     } else {
-      ourMob[numPokemon].PV["current"] = 0;
+      ourMob[numOurPokemon].PV["current"] = 0;
       updateTextBox(`${ourName} est KO`);
       setTimeout(() => {
         setShowModalPokemon(true);
@@ -367,12 +383,12 @@ export default function FightPVE({ navigation, route }) {
         >
           <View>
             <View style={styles.modalView}>
-              {ourMob[numPokemon].capacities.map((el) => {
+              {ourMob[numOurPokemon].capacities.map((el) => {
                 return (
                   <Pressable
                     style={styles.buttonModal}
                     onPress={() => {
-                      attackByOur(el.name, el.power),
+                      attackByOur(el.name, el.power, el.type),
                         setShowModalAttack(!showModalAttack);
                     }}
                   >
@@ -438,7 +454,7 @@ export default function FightPVE({ navigation, route }) {
           <View>
             <View style={styles.modalView}>
               {ourMob.map((el, index) => {
-                if (el.PV["current"] != 0 && index != numPokemon) {
+                if (el.PV["current"] != 0 && index != numOurPokemon) {
                   return (
                     <Pressable
                       style={styles.buttonModal}
