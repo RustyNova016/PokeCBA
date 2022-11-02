@@ -37,8 +37,9 @@ export default function FightPVE({ navigation, route }) {
 
   // NOTRE POKEMON
   const [numOurPokemon, setNumOurPokemon] = useState(0);
-  const [numAdvPokemon] = useState(0
-   // Math.round(Math.random() * (advMob.length - 1))
+  const [numAdvPokemon] = useState(
+    0
+    // Math.round(Math.random() * (advMob.length - 1))
   );
 
   const [ourHealth, setOurHealth] = useState(
@@ -86,6 +87,17 @@ export default function FightPVE({ navigation, route }) {
   const [ourAnimation, setOurAnimation] = useState(0);
   const [advAnimation, setAdvAnimation] = useState(0);
 
+  // VARIABLES NECESSAIRE POUR UTILISATION D'UN ITEM
+  const [nameItem, setNameItem] = useState("");
+  const [effectItem, setEffectItem] = useState(0);
+  const [indexItem, setIndexItem] = useState(0);
+  const [needAlive, setNeedAlive] = useState(false);
+
+  // VARIABLES POUR DEFINITION DE L'AFFICHAGE DE LA MODAL POKEMON
+  const [modalDisplayForChange, setModalDisplayForChange] = useState(false);
+  const [modalDisplayPokemonAlive, setModalDisplayPokemonAlive] = useState(false);
+  const [modalDisplayPokemonDead, setModalDisplayPokemonDead] = useState(false);
+
   useEffect(() => {
     // ON INITIALISE LES VARIABLES DE NOTRE POKEMON
     setOurHealth(ourMob[numOurPokemon].PV["current"]);
@@ -98,11 +110,14 @@ export default function FightPVE({ navigation, route }) {
     setSrcOurPokemon(ourMob[numOurPokemon].img);
     setOurType(ourMob[numOurPokemon].type);
 
+    // On remet la variable de définition de la modal Pokemon sur false
+    setModalDisplayForChange(false);
+
     // ON VERIFIE L'INITIALISATION DE NOS VARIABLES
     if (ourName) {
       // Animation de départ
       setTimeout(() => {
-        updateTextBox(`${ourName} GO !`);
+        updateTextBox(`En avant ${ourName} !`);
         setShowTrainer(false);
         setShowOurPokemon(true);
       }, 2000);
@@ -114,7 +129,7 @@ export default function FightPVE({ navigation, route }) {
           ? (updateTextBox(`${advName} est rapide, il attaque en premier`),
             setHiddenButtonOfMenu(true),
             attackByAdv())
-          : updateTextBox(`Que fais t-on ?`);
+          : updateTextBox(`Que dois faire ${ourName}?`);
       }, 4000);
     }
   }, [ourName, numOurPokemon]);
@@ -132,6 +147,7 @@ export default function FightPVE({ navigation, route }) {
 
     // Appel de la fonction : Calcul dégats et définition du texte
     let result = CalculateDamage(
+      advName,
       advLevel,
       advAttack,
       nameAdvAttack,
@@ -152,13 +168,17 @@ export default function FightPVE({ navigation, route }) {
     // On réaffecte les différentes variables
     setTimeout(() => {
       ourHealth + effectItem - damage > 0
-        ? (setOurHealth((ourHealth) => ourHealth - damage),
-          updateTextBox(text),
-          setAdvAnimation(advAnimation + 1),
-          setHiddenButtonOfMenu(false))
-        : (updateTextBox(text),
-          setAdvAnimation(advAnimation + 1),
-          maybeDefeatForUs());
+        ? (setAdvAnimation(advAnimation + 1),
+          setTimeout(() => {
+            setOurHealth((ourHealth) => ourHealth - damage);
+            updateTextBox(text);
+            setHiddenButtonOfMenu(false);
+          }, 300))
+        : (setAdvAnimation(advAnimation + 1),
+          setTimeout(() => {
+            updateTextBox(text);
+            maybeDefeatForUs();
+          }, 300));
     }, 1000);
   };
 
@@ -169,6 +189,7 @@ export default function FightPVE({ navigation, route }) {
 
     // Appel de la fonction : Calcul dégats et définition du texte
     let result = CalculateDamage(
+      ourName,
       ourLevel,
       ourAttack,
       nameOurAttack,
@@ -184,15 +205,18 @@ export default function FightPVE({ navigation, route }) {
     let text = result[1];
 
     // On réaffecte les différentes variables
-    setAdvHealth((advHealth) => advHealth - damage);
-    updateTextBox(text);
     setOurAnimation(ourAnimation + 1);
-    setHiddenButtonOfMenu(true);
-    advHealth - damage <= 0 ? victoryForUs() : attackByAdv();
+
+    setTimeout(() => {
+      setAdvHealth((advHealth) => advHealth - damage);
+      updateTextBox(text);
+      setHiddenButtonOfMenu(true);
+      advHealth - damage <= 0 ? victoryForUs() : attackByAdv();
+    }, 300);
   };
 
   // Fonction utilisation ITEM
-  const useItem = function (nameItem, effectItem, indexItem) {
+  const useItem = function (indexPokemon) {
     // On cache les boutons du Menu
     setHiddenButtonOfMenu(true);
 
@@ -203,22 +227,53 @@ export default function FightPVE({ navigation, route }) {
     let qty = item[indexItem].qty;
     qty == 0 ? item.splice(indexItem, 1) : null;
 
-    // On applique l'effet de l'Item
-    if (ourHealth + effectItem > ourMaxHealth) {
-      setOurHealth(ourMaxHealth);
+    // On applique l'effet de l'Item pour pokémon vivants (potions)
+    // Si c'est le pokémon en jeu
+    if (needAlive) {
+      if (indexPokemon == numOurPokemon) {
+        if (ourHealth + effectItem > ourMaxHealth) {
+          setOurHealth(ourMaxHealth);
+        } else {
+          setOurHealth((ourHealth) => ourHealth + effectItem);
+        }
+        updateTextBox(`${nameItem} vous redonne ${effectItem} PV`);
+        attackByAdv(effectItem);
+        // Si un autre pokémon
+      } else {
+        if (
+          ourMob[indexPokemon].PV["current"] + effectItem >=
+          ourMob[indexPokemon].PV["max"]
+        ) {
+          ourMob[indexPokemon].PV["current"] = ourMob[indexPokemon].PV["max"];
+        } else {
+          ourMob[indexPokemon].PV["current"] =
+            ourMob[indexPokemon].PV["current"] + effectItem;
+        }
+        updateTextBox(
+          `${nameItem} redonne ${effectItem} PV à ${ourMob[indexPokemon].label}`
+        );
+        attackByAdv();
+      }
+      // On applique l'effet de l'Item pour pokémon morts (potions)
     } else {
-      setOurHealth((ourHealth) => ourHealth + effectItem);
+      ourMob[indexPokemon].PV["current"] = parseInt(
+        ourMob[indexPokemon].PV["max"] * (effectItem / 100)
+      );
+      updateTextBox(`${nameItem} redonne vie à ${ourMob[indexPokemon].label}`);
+      attackByAdv();
     }
 
-    // On mets à jour la textBox
-    updateTextBox(`${nameItem} vous redonne ${effectItem} PV`);
-
-    // Appel fonction d'attaque adverse avec l'effet de l'item pour vérification
-    attackByAdv(effectItem);
+    // On remet les variable de définition de la modal Pokemon sur false
+    setNeedAlive(false);
+    setModalDisplayPokemonAlive(false);
+    setModalDisplayPokemonDead(false);
   };
 
   // Fonction changement de Pokemon
   const changeOurPokemon = function (index) {
+    // On met la variable de définition de la modal Pokemon sur true
+    setModalDisplayForChange(true);
+
     // On ré-affiche le bouton RETOUR dans la modal Pokemon
     setHiddenButonRetour(false);
 
@@ -290,6 +345,7 @@ export default function FightPVE({ navigation, route }) {
       ourMob[numOurPokemon].PV["current"] = 0;
       updateTextBox(`${ourName} est KO`);
       setTimeout(() => {
+        setModalDisplayForChange(true);
         setShowModalPokemon(true);
       }, 2000);
     }
@@ -354,7 +410,10 @@ export default function FightPVE({ navigation, route }) {
             </Pressable>
             <Pressable
               style={styles.buttonPokemon}
-              onPress={() => setShowModalPokemon(!showModalPokemon)}
+              onPress={() => {
+                setShowModalPokemon(!showModalPokemon);
+                setModalDisplayForChange(true);
+              }}
             >
               <Text style={styles.pixelPolice}>POKéMON</Text>
             </Pressable>
@@ -422,13 +481,27 @@ export default function FightPVE({ navigation, route }) {
                   <Pressable
                     style={styles.buttonModal}
                     onPress={() => {
-                      useItem(el.name, el.effect, index),
-                        setShowModalBag(!showModalBag);
+                      setNameItem(el.name);
+                      setEffectItem(el.effect);
+                      setIndexItem(index);
+                      setNeedAlive(el.needAlive);
+                      el.needAlive
+                        ? setModalDisplayPokemonAlive(() => true)
+                        : setModalDisplayPokemonDead(() => true);
+                      setShowModalBag(!showModalBag);
+                      setShowModalPokemon(true);
                     }}
                   >
-                    <Text style={styles.textModal}>
-                      {el.name} (+{el.effect}PV) x{el.qty}
-                    </Text>
+                    {el.needAlive && (
+                      <Text style={styles.textModal}>
+                        {el.name} (+{el.effect}PV) x{el.qty}
+                      </Text>
+                    )}
+                    {!el.needAlive && (
+                      <Text style={styles.textModal}>
+                        {el.name} ({el.effect}% PV MAX) x{el.qty}
+                      </Text>
+                    )}
                   </Pressable>
                 );
               })}
@@ -454,28 +527,81 @@ export default function FightPVE({ navigation, route }) {
           <View>
             <View style={styles.modalView}>
               {ourMob.map((el, index) => {
-                if (el.PV["current"] != 0 && index != numOurPokemon) {
-                  return (
-                    <Pressable
-                      style={styles.buttonModal}
-                      onPress={() => {
-                        changeOurPokemon(index);
-                        setShowModalPokemon(!showModalPokemon);
-                      }}
-                    >
-                      <Text style={styles.textModal}>
-                        {el.label} - {el.PV["current"]}/{el.PV["max"]}PV
-                      </Text>
-                    </Pressable>
-                  );
+                {
+                  /* Affichage pour le changement de Pokemon */
+                }
+                if (modalDisplayForChange) {
+                  if (el.PV["current"] != 0 && index != numOurPokemon) {
+                    return (
+                      <Pressable
+                        style={styles.buttonModal}
+                        onPress={() => {
+                          changeOurPokemon(index);
+                          setShowModalPokemon(!showModalPokemon);
+                        }}
+                      >
+                        <Text style={styles.textModal}>
+                          {el.label} - {el.PV["current"]}/{el.PV["max"]}PV
+                        </Text>
+                      </Pressable>
+                    );
+                  }
+                }
+                {
+                  /* Affichage pour utilisation item sur Pokemon Vivants */
+                }
+                if (modalDisplayPokemonAlive) {
+                  if (el.PV["current"] != 0) {
+                    return (
+                      <Pressable
+                        style={styles.buttonModal}
+                        onPress={() => {
+                          useItem(index);
+                          setShowModalPokemon(!showModalPokemon);
+                        }}
+                      >
+                        {index != numOurPokemon && (
+                          <Text style={styles.textModal}>
+                            {el.label} - {el.PV["current"]}/{el.PV["max"]}PV
+                          </Text>
+                        )}
+                        {index == numOurPokemon && (
+                          <Text style={styles.textModal}>{el.label}</Text>
+                        )}
+                      </Pressable>
+                    );
+                  }
+                }
+                {
+                  /* Affichage pour utilisation item sur Pokemon Morts */
+                }
+                if (modalDisplayPokemonDead) {
+                  if (el.PV["current"] == 0) {
+                    return (
+                      <Pressable
+                        style={styles.buttonModal}
+                        onPress={() => {
+                          useItem(index);
+                          setShowModalPokemon(!showModalPokemon);
+                        }}
+                      >
+                        <Text style={styles.textModal}>
+                          {el.label} - {el.PV["current"]}/{el.PV["max"]}PV
+                        </Text>
+                      </Pressable>
+                    );
+                  }
                 }
               })}
               {!hiddenButtonRetour && (
                 <Pressable
                   style={styles.buttonModal}
                   onPress={() => {
-                    setShowModalPokemon(!showModalPokemon),
-                      setHiddenButtonOfMenu(false);
+                    setShowModalPokemon(!showModalPokemon);
+                    setHiddenButtonOfMenu(() => false);
+                    setModalDisplayPokemonAlive(() => false);
+                    setModalDisplayPokemonDead(() => false);
+                    setModalDisplayForChange(() => false);
                   }}
                 >
                   <Text style={styles.textModal}>RETOUR</Text>

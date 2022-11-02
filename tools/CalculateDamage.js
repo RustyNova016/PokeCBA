@@ -1,4 +1,5 @@
 export function CalculateDamage(
+  nameOfAttacker,
   levelOfAttacker,
   attackOfAttacker,
   nameOfAttack,
@@ -33,18 +34,60 @@ export function CalculateDamage(
     }
   }
 
-  // On modifie le texte en fonction des dégats finals
+  // Variable au hasard pour choix du texte
+  let whatText = Math.round(Math.random() * 2);
+  console.log(whatText);
+
+  // On modifie le texte en fonction des dégats finals et en fonction de la variable whatText.
   if (damage > initialDamage) {
-    text = `C'est super efficace ! ${nameOfAttack} inflige ${damage} de dégats`;
+    switch (whatText) {
+      case 0:
+        text = `C'est très efficace ! ${nameOfAttack} inflige ${damage} de dégats`;
+        break;
+      case 1:
+        text = `Quelle eficacité ! ${nameOfAttacker} inflige ${damage} de dégats`;
+        break;
+      case 2:
+        text = `C'est super efficace !`;
+        break;
+    }
   } else if (damage == initialDamage) {
-    text = `Attaque ${nameOfAttack} ! Elle inflige ${damage} de dégats`;
+    switch (whatText) {
+      case 0:
+        text = `Attaque ${nameOfAttack} ! Elle inflige ${damage} de dégats`;
+        break;
+      case 1:
+        text = `${nameOfAttacker} utilise ${nameOfAttack}`;
+        break;
+      case 2:
+        text = `${nameOfAttacker} inflige ${damage} de dégats`;
+        break;
+    }
   } else if (damage == 0) {
-    text = `${nameOfAttack} n'a aucun effet ...`;
+    switch (whatText) {
+      case 0:
+        text = `${nameOfAttack} n'a aucun effet ...`;
+        break;
+      case 1:
+        text = `Ca n'affecte pas ${nameOfDefender}`;
+        break;
+      case 2:
+        text = `${nameOfAttacker} loupe son attaque !`;
+        break;
+    }
   } else if (damage < initialDamage) {
-    text = `Pas très efficace ! ${nameOfAttack} inflige ${damage} de dégats`;
+    switch (whatText) {
+      case 0:
+        text = `Pas très efficace ! ${nameOfAttack} inflige ${damage} de dégats`;
+        break;
+      case 1:
+        text = `${nameOfAttack} inflige seulement ${damage} de dégats`;
+        break;
+      case 2:
+        text = `Ce n'est pas très efficace`;
+        break;
+    }
   }
-
-
 
   // On modifie le texte et les dommages en fonction de la chance sauf si le pokémon defenseur est immunisé ou peu sensible
   if (damage >= initialDamage) {
