@@ -13,5 +13,5 @@ export interface MobJSONFormat {
     HP: number;
     HPMax: number;
     XP: number;
-    idItem: DB_ID;
+    idItem?: DB_ID;
 }

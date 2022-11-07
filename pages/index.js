@@ -2,14 +2,14 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {MobModel} from "../classes/MobModel";
-import {TEST_Mob_Model} from "../tests/Test Data/TEST_Mob_Model";
+import {TEST_MobModel} from "../tests/Test Data/TEST_MobModel";
 import {Debug_MobModel} from "../tests/Debug Components/Debug_MobModel";
 import {useElementType} from "../API/Data Hooks/useElementType";
 
 export default function App() {
     useElementType()
     console.log("Creating test babasaure")
-    const testBabaure = MobModel.fromJson(TEST_Mob_Model.babasaure);
+    const testBabaure = MobModel.fromJson(TEST_MobModel.babasaure);
 
     return (
         <View style={styles.container}>

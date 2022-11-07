@@ -10,12 +10,12 @@ const babasaure = {
     defense: 21,
     speed: 21,
     isShiny: false,
-    img: ["img1"],
+    img: ["https://media.discordapp.net/attachments/1039170527220215849/1039170543993241670/image.png"],
     abilities: [TEST_Abilities.charge],
     elementTypes: [TEST_ElementTypes.normal.idType, TEST_ElementTypes.plant.idType],
 };
 
-export const TEST_Mob_Model = {
+export const TEST_MobModel = {
     babasaure: babasaure,
 
     babasaureShiny: {
