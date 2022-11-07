@@ -1,14 +1,14 @@
 import {GameItemJSONFormat} from "./GameItemJSONFormat";
-import {Mob} from "../Mob";
 import {DB_ID} from "./ElementTypeJSONFormat";
+import {TeamJSONFormat} from "./TeamJSONFormat";
 
 export interface PlayerJSONFormat {
-    id: DB_ID
-    nickname: string;
-    xp: number;
     gold: number;
+    id: DB_ID
     img: string[];
     inventory: GameItemJSONFormat[];
-    teams: Mob[];
+    nickname: string;
+    teams: TeamJSONFormat[];
+    xp: number;
     // Todo: player skills?
 }

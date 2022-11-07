@@ -37,7 +37,7 @@ export class Mob {
     /**
      * @param {MobJSONFormat} json
      */
-    fromJSON(json) {
+    static fromJSON(json) {
         const abilities = [];
 
         // Convert the abilities

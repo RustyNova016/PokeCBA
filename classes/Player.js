@@ -1,4 +1,6 @@
 /** @extends PlayerJSONFormat */
+import {Team} from "./Team";
+import {GameItemCollection} from "./GameItemCollection";
 
 export class Player {
     /**
@@ -9,7 +11,7 @@ export class Player {
      * @param {number} gold
      * @param {string[]} img
      * @param {GameItem[]} inventory
-     * @param {Mob[]} teams
+     * @param {Team[]} teams
      */
     constructor(id, nickname, xp, gold, img, inventory, teams) {
         this.id = id
@@ -26,6 +28,18 @@ export class Player {
      * @param {PlayerJSONFormat} json
      */
     static fromJSON(json){
-        return new Player(json.id, json.nickname, json.xp, json.gold, json.img, json.inventory, json.teams);
+        const gameItemsArray = [];
+        const teamsArray = [];
+        const instance = GameItemCollection.getInstance();
+
+        for (const gameItemJSONFormat of json.inventory) {
+            gameItemsArray.push(instance.findOrAdd(gameItemJSONFormat));
+        }
+
+        for (const team of json.teams) {
+            teamsArray.push(Team.fromJSON(team))
+        }
+
+        return new Player(json.id, json.nickname, json.xp, json.gold, json.img, gameItemsArray, teamsArray);
     }
 }
