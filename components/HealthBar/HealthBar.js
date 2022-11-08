@@ -9,6 +9,7 @@ const HealthBar = (props) => {
       color={props.colorHealthBar}
       width={props.widthHealthBar}
       height={props.heigthHealthBar}
+      unfilledColor="#1F0F42"
     />
   );
 };

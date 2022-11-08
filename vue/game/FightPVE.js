@@ -300,8 +300,8 @@ export default function FightPVE({ navigation, route }) {
   // Fonction de MAJ de la TextBox
   const updateTextBox = function (text) {
     textBox.unshift(text);
-    if (textBox.length > 10) {
-      textBox.length = 10;
+    if (textBox.length > 8) {
+      textBox.length = 8;
     }
     // MAJ d'une variable inutile pour MAJ affichage
     setMajTextBox(Math.random());
@@ -359,22 +359,23 @@ export default function FightPVE({ navigation, route }) {
           {/* HealthBar Adverse + Affichage Pokemon + Vie Pokemon sauvage*/}
           {showPokemonAdv && (
             <Shake value={advAnimation} type="timing">
-                <HealthBar
-                  styleHealthBar={styles.advHealthBar}
-                  progressHealthBar={advHealth / advMaxHealth}
-                  colorHealthBar={ColorHealthBar(advHealth / advMaxHealth)}
-                  widthHealthBar={100}
-                  heigthHealthBar={10}
-                />
-                <Image style={styles.imgAdvPokemon} source={srcAdvPokemon} />
-                <Text style={styles.advHealth}>{advHealth} /</Text>
-                <Text style={styles.advMaxHealth}>{advMaxHealth}</Text>
+              <HealthBar
+                styleHealthBar={styles.advHealthBar}
+                progressHealthBar={advHealth / advMaxHealth}
+                colorHealthBar={ColorHealthBar(advHealth / advMaxHealth)}
+                widthHealthBar={100}
+                heigthHealthBar={10}
+              />
+              <Image style={styles.imgAdvPokemon} source={srcAdvPokemon} />
+              <Text style={styles.advHealth}>
+                {advHealth} / {advMaxHealth}
+              </Text>
             </Shake>
           )}
           {/* Gestion affichage Pokemon */}
           {showOurPokemon && (
             <Shake value={ourAnimation} type="timing">
-                <Image style={styles.imgOurPokemon} source={srcOurPokemon} />
+              <Image style={styles.imgOurPokemon} source={srcOurPokemon} />
             </Shake>
           )}
           {/* Gestion affichage dresseur */}
@@ -393,8 +394,9 @@ export default function FightPVE({ navigation, route }) {
               heigthHealthBar={25}
             />
             {/* Affichage Notre Vie */}
-            <Text style={styles.ourHealth}>{ourHealth}</Text>
-            <Text style={styles.ourMaxHealth}>{ourMaxHealth}</Text>
+            <Text style={styles.ourHealth}>
+              {ourHealth} / {ourMaxHealth}
+            </Text>
           </View>
 
           <View style={styles.viewTextAndButton}>
@@ -402,7 +404,7 @@ export default function FightPVE({ navigation, route }) {
               {/* TextBox */}
               <View style={styles.textBox}>
                 {textBox.map((ligne) => {
-                  return <Text style={styles.pixelPolice}>● {ligne}</Text>;
+                  return <Text style={styles.lineOfTextBox}>● {ligne}</Text>;
                 })}
                 {/* Modal pour les attaques */}
                 <Modal
@@ -422,7 +424,7 @@ export default function FightPVE({ navigation, route }) {
                                 setShowModalAttack(!showModalAttack);
                             }}
                           >
-                            <Text style={styles.textModal}>{el.name}</Text>
+                            <Text style={styles.textButton}>{el.name}</Text>
                           </Pressable>
                         );
                       })}
@@ -432,7 +434,7 @@ export default function FightPVE({ navigation, route }) {
                           setShowModalAttack(!showModalAttack);
                         }}
                       >
-                        <Text style={styles.textModal}>RETOUR</Text>
+                        <Text style={styles.textButton}>RETOUR</Text>
                       </Pressable>
                     </View>
                   </View>
@@ -464,12 +466,12 @@ export default function FightPVE({ navigation, route }) {
                             }}
                           >
                             {el.needAlive && (
-                              <Text style={styles.textModal}>
+                              <Text style={styles.textButton}>
                                 {el.name} (+{el.effect}PV) x{el.qty}
                               </Text>
                             )}
                             {!el.needAlive && (
-                              <Text style={styles.textModal}>
+                              <Text style={styles.textButton}>
                                 {el.name} ({el.effect}% PV MAX) x{el.qty}
                               </Text>
                             )}
@@ -482,7 +484,7 @@ export default function FightPVE({ navigation, route }) {
                           setShowModalBag(!showModalBag);
                         }}
                       >
-                        <Text style={styles.textModal}>RETOUR</Text>
+                        <Text style={styles.textButton}>RETOUR</Text>
                       </Pressable>
                     </View>
                   </View>
@@ -511,7 +513,7 @@ export default function FightPVE({ navigation, route }) {
                                   setShowModalPokemon(!showModalPokemon);
                                 }}
                               >
-                                <Text style={styles.textModal}>
+                                <Text style={styles.textButton}>
                                   {el.label} - {el.PV["current"]}/{el.PV["max"]}
                                   PV
                                 </Text>
@@ -533,13 +535,13 @@ export default function FightPVE({ navigation, route }) {
                                 }}
                               >
                                 {index != numOurPokemon && (
-                                  <Text style={styles.textModal}>
+                                  <Text style={styles.textButton}>
                                     {el.label} - {el.PV["current"]}/
                                     {el.PV["max"]}PV
                                   </Text>
                                 )}
                                 {index == numOurPokemon && (
-                                  <Text style={styles.textModal}>
+                                  <Text style={styles.textButton}>
                                     {el.label}
                                   </Text>
                                 )}
@@ -560,7 +562,7 @@ export default function FightPVE({ navigation, route }) {
                                   setShowModalPokemon(!showModalPokemon);
                                 }}
                               >
-                                <Text style={styles.textModal}>
+                                <Text style={styles.textButton}>
                                   {el.label} - {el.PV["current"]}/{el.PV["max"]}
                                   PV
                                 </Text>
@@ -580,7 +582,7 @@ export default function FightPVE({ navigation, route }) {
                             setModalDisplayForChange(() => false);
                           }}
                         >
-                          <Text style={styles.textModal}>RETOUR</Text>
+                          <Text style={styles.textButton}>RETOUR</Text>
                         </Pressable>
                       )}
                     </View>
@@ -592,27 +594,27 @@ export default function FightPVE({ navigation, route }) {
             <View style={styles.viewButton}>
               {/* Bouttons */}
               {!hiddenButtonOfMenu && (
-                <View>
+                <View style={styles.viewButton}>
                   <Pressable
-                    style={styles.buttonAttack}
+                    style={styles.button}
                     onPress={() => setShowModalAttack(!showModalAttack)}
                   >
-                    <Text style={styles.pixelPolice}>ATTAQUER</Text>
+                    <Text style={styles.textButton}>ATTAQUER</Text>
                   </Pressable>
                   <Pressable
-                    style={styles.buttonBag}
+                    style={styles.button}
                     onPress={() => setShowModalBag(!showModalBag)}
                   >
-                    <Text style={styles.pixelPolice}>SAC</Text>
+                    <Text style={styles.textButton}>SAC</Text>
                   </Pressable>
                   <Pressable
-                    style={styles.buttonPokemon}
+                    style={styles.button}
                     onPress={() => {
                       setShowModalPokemon(!showModalPokemon);
                       setModalDisplayForChange(true);
                     }}
                   >
-                    <Text style={styles.pixelPolice}>POKéMON</Text>
+                    <Text style={styles.textButton}>POKéMON</Text>
                   </Pressable>
                 </View>
               )}
@@ -664,8 +666,8 @@ const styles = new StyleSheet.create({
     height: 300,
     resizeMode: "contain",
     position: "absolute",
-    top: 0,
-    left: 0,
+    top: 372,
+    left: 70,
   },
 
   imgAdvPokemon: {
@@ -674,7 +676,7 @@ const styles = new StyleSheet.create({
     resizeMode: "contain",
     position: "absolute",
     top: 0,
-    left: -120
+    left: -120,
   },
 
   imgOurPokemon: {
@@ -689,38 +691,15 @@ const styles = new StyleSheet.create({
   // TEXTBOX et TEXTE
   textBox: {
     position: "absolute",
-    top: 2,
-    left: 15,
+    width: "100%",
   },
 
-  pixelPolice: {
+  lineOfTextBox: {
+    marginLeft: 15,
+    textAlign: "justify",
     fontFamily: "SHPinscher",
     color: "#1F0F42",
-    fontSize: 15,
-  },
-
-  textModal: {
-    textAlign: "center",
-    color: "#1F0F42",
-    fontSize: 15,
-    padding: 3,
-    fontFamily: "SHPinscher",
-  },
-
-  ourHealth: {
-    position: "absolute",
-    top: 9,
-    left: 393,
-    fontFamily: "SHPinscher",
-    color: "#1F0F42",
-  },
-
-  ourMaxHealth: {
-    position: "absolute",
-    top: 9,
-    left: 423,
-    fontFamily: "SHPinscher",
-    color: "#1F0F42",
+    fontSize: 18,
   },
 
   advHealth: {
@@ -731,46 +710,25 @@ const styles = new StyleSheet.create({
     color: "#1F0F42",
   },
 
-  advMaxHealth: {
-    position: "absolute",
-    top: 9,
-    left: 110,
+  // BOUTTONS MENU
+  button: {
+    backgroundColor: "#FFCC03",
+    elevation: 1,
+    height: 35,
+    width: 120,
+    marginTop: 5,
+    borderRadius: 5,
+  },
+
+  textButton: {
+    textAlign: "center",
     fontFamily: "SHPinscher",
     color: "#1F0F42",
-  },
-
-  // BOUTTONS MENU
-  buttonAttack: {
-    position: "absolute",
-    top: -120,
-    left: -24,
-    height: 35,
-    width: 150,
-  },
-
-  buttonBag: {
-    position: "absolute",
-    top: -78,
-    left: -10,
-    height: 35,
-    width: 150,
-  },
-
-  buttonPokemon: {
-    position: "absolute",
-    top: -35,
-    left: -22,
-    height: 35,
-    width: 150,
+    fontSize: 18,
+    padding: 3,
   },
 
   // HEALTHBAR
-  ourHealthBar: {
-    position: "absolute",
-    top: 7,
-    left: 16,
-    borderRadius: 5,
-  },
 
   advHealthBar: {
     position: "absolute",
@@ -794,11 +752,24 @@ const styles = new StyleSheet.create({
   },
 
   viewOurHealthBar: {
+    flexDirection: "row",
     width: "100%",
     height: "14%",
-    justifyContent: "center",
+    justifyContent: "space-evenly",
     alignItems: "center",
     position: "relative",
+  },
+
+  ourHealthBar: {
+    marginLeft: 5,
+    marginBottom: 2,
+    borderRadius: 5,
+  },
+
+  ourHealth: {
+    fontFamily: "SHPinscher",
+    fontSize: 15,
+    color: "#1F0F42",
   },
 
   viewText: {
@@ -812,7 +783,6 @@ const styles = new StyleSheet.create({
   viewButton: {
     width: "33.5%",
     height: "100%",
-    justifyContent: "center",
     alignItems: "center",
     position: "relative",
   },
@@ -821,7 +791,6 @@ const styles = new StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     height: "86%",
-
     position: "relative",
   },
 });
