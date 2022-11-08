@@ -355,6 +355,15 @@ export default function FightPVE({ navigation, route }) {
   return (
     <View style={styles.container}>
       <ImageBackground source={srcBackground} style={styles.imageBackGround}>
+        <View style={styles.viewTopPage}></View>
+        <View style={styles.viewBottomPage}>
+          <View style={styles.viewOurHealthBar}></View>
+          <View style={styles.viewTextAndButton}>
+            <View style={styles.viewText}></View>
+            <View style={styles.viewButton}></View>
+          </View>
+        </View>
+
         {/* HealthBar Adverse + Affichage Pokemon + Vie Pokemon sauvage*/}
         {showPokemonAdv && (
           <Shake value={advAnimation} type="timing">
@@ -625,7 +634,6 @@ const styles = new StyleSheet.create({
   imageBackGround: {
     flex: 1,
     resizeMode: "cover",
-    justifyContent: "center",
   },
 
   // MODAL
@@ -689,6 +697,7 @@ const styles = new StyleSheet.create({
   pixelPolice: {
     fontFamily: "SHPinscher",
     color: "#1F0F42",
+    fontSize: 15,
   },
 
   textModal: {
@@ -769,5 +778,62 @@ const styles = new StyleSheet.create({
     top: -170,
     left: 310,
     borderRadius: 5,
+  },
+
+  viewTopPage: {
+    borderColor: "pink",
+    borderWidth: 5,
+    width: "100%",
+    height: "69%",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+  },
+
+  viewBottomPage: {
+    borderColor: "red",
+    borderWidth: 5,
+    width: "100%",
+    height: "31%",
+    position: "relative",
+  },
+
+  viewOurHealthBar: {
+    borderColor: "green",
+    borderWidth: 5,
+    width: "100%",
+    height: "17%",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+  },
+
+  viewText: {
+    borderColor: "orange",
+    borderWidth: 5,
+    width: "66.5%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+  },
+
+  viewButton: {
+    borderColor: "white",
+    borderWidth: 5,
+    width: "33.5%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+  },
+
+  viewTextAndButton: {
+    flexDirection: "row",
+    width: "100%",
+    height: "84%",
+    borderColor: "black",
+    borderWidth: 5,
+    position: "relative",
   },
 });
