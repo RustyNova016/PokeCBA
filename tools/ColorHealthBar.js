@@ -8,5 +8,4 @@ export function ColorHealthBar(value) {
   } else if (value <= 0.75) {
     return "yellow";
   }
-  /*Salut*/
 }
