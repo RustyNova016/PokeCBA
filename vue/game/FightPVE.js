@@ -5,6 +5,7 @@ import { CalculateDamage } from "../../tools/CalculateDamage.js";
 import { ColorHealthBar } from "../../tools/ColorHealthBar";
 import { StyleSheet } from "react-native";
 import { Shake } from "react-native-motion";
+import { Dimensions } from 'react-native';
 
 import { advMob } from "../../classes/advMob";
 import { ourMob } from "../../classes/ourMob";
@@ -22,6 +23,10 @@ import {
 } from "react-native";
 
 export default function FightPVE({ navigation, route }) {
+  //TAILLE ECRAN
+  const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
   // VARIABLES POUR LES IMAGES
   const srcBackground = constClass.srcBackground;
   const [srcTrainer, setSrcTrainer] = useState(
@@ -390,7 +395,7 @@ export default function FightPVE({ navigation, route }) {
               styleHealthBar={styles.ourHealthBar}
               progressHealthBar={ourHealth / ourMaxHealth}
               colorHealthBar={ColorHealthBar(ourHealth / ourMaxHealth)}
-              widthHealthBar={363}
+              widthHealthBar={(0.37*windowHeight)}
               heigthHealthBar={25}
             />
             {/* Affichage Notre Vie */}
@@ -744,7 +749,6 @@ const styles = new StyleSheet.create({
   },
 
   textBox: {
-    position: "absolute",
     width: "100%",
   },
 
