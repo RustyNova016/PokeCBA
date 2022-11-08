@@ -11,6 +11,8 @@ npm-debug.*
 *.orig.*
 web-build/
 web-report/
+coverage/
+/coverage/
 
 # debug
 yarn-debug.log*
