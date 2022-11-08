@@ -36,7 +36,6 @@ export function CalculateDamage(
 
   // Variable au hasard pour choix du texte
   let whatText = Math.round(Math.random() * 2);
-  console.log(whatText);
 
   // On modifie le texte en fonction des dégats finals et en fonction de la variable whatText.
   if (damage > initialDamage) {

@@ -406,188 +406,6 @@ export default function FightPVE({ navigation, route }) {
                 {textBox.map((ligne) => {
                   return <Text style={styles.lineOfTextBox}>● {ligne}</Text>;
                 })}
-                {/* Modal pour les attaques */}
-                <Modal
-                  animationType="slide"
-                  visible={showModalAttack}
-                  transparent={true}
-                  onRequestClose={() => setShowModalAttack(!showModalAttack)}
-                >
-                  <View>
-                    <View style={styles.modalView}>
-                      {ourMob[numOurPokemon].capacities.map((el) => {
-                        return (
-                          <Pressable
-                            style={styles.buttonModal}
-                            onPress={() => {
-                              attackByOur(el.name, el.power, el.type),
-                                setShowModalAttack(!showModalAttack);
-                            }}
-                          >
-                            <Text style={styles.textButton}>{el.name}</Text>
-                          </Pressable>
-                        );
-                      })}
-                      <Pressable
-                        style={styles.buttonModal}
-                        onPress={() => {
-                          setShowModalAttack(!showModalAttack);
-                        }}
-                      >
-                        <Text style={styles.textButton}>RETOUR</Text>
-                      </Pressable>
-                    </View>
-                  </View>
-                </Modal>
-
-                {/* Modal pour les objets */}
-                <Modal
-                  animationType="slide"
-                  visible={showModalBag}
-                  transparent={true}
-                  onRequestClose={() => setShowModalBag(!showModalBag)}
-                >
-                  <View>
-                    <View style={styles.modalView}>
-                      {item.map((el, index) => {
-                        return (
-                          <Pressable
-                            style={styles.buttonModal}
-                            onPress={() => {
-                              setNameItem(el.name);
-                              setEffectItem(el.effect);
-                              setIndexItem(index);
-                              setNeedAlive(el.needAlive);
-                              el.needAlive
-                                ? setModalDisplayPokemonAlive(() => true)
-                                : setModalDisplayPokemonDead(() => true);
-                              setShowModalBag(!showModalBag);
-                              setShowModalPokemon(true);
-                            }}
-                          >
-                            {el.needAlive && (
-                              <Text style={styles.textButton}>
-                                {el.name} (+{el.effect}PV) x{el.qty}
-                              </Text>
-                            )}
-                            {!el.needAlive && (
-                              <Text style={styles.textButton}>
-                                {el.name} ({el.effect}% PV MAX) x{el.qty}
-                              </Text>
-                            )}
-                          </Pressable>
-                        );
-                      })}
-                      <Pressable
-                        style={styles.buttonModal}
-                        onPress={() => {
-                          setShowModalBag(!showModalBag);
-                        }}
-                      >
-                        <Text style={styles.textButton}>RETOUR</Text>
-                      </Pressable>
-                    </View>
-                  </View>
-                </Modal>
-
-                {/* Modal pour les Pokemon */}
-                <Modal
-                  animationType="slide"
-                  visible={showModalPokemon}
-                  transparent={true}
-                  onRequestClose={() => setShowModalPokemon(!showModalPokemon)}
-                >
-                  <View>
-                    <View style={styles.modalView}>
-                      {ourMob.map((el, index) => {
-                        {
-                          /* Affichage pour le changement de Pokemon */
-                        }
-                        if (modalDisplayForChange) {
-                          if (el.PV["current"] != 0 && index != numOurPokemon) {
-                            return (
-                              <Pressable
-                                style={styles.buttonModal}
-                                onPress={() => {
-                                  changeOurPokemon(index);
-                                  setShowModalPokemon(!showModalPokemon);
-                                }}
-                              >
-                                <Text style={styles.textButton}>
-                                  {el.label} - {el.PV["current"]}/{el.PV["max"]}
-                                  PV
-                                </Text>
-                              </Pressable>
-                            );
-                          }
-                        }
-                        {
-                          /* Affichage pour utilisation item sur Pokemon Vivants */
-                        }
-                        if (modalDisplayPokemonAlive) {
-                          if (el.PV["current"] != 0) {
-                            return (
-                              <Pressable
-                                style={styles.buttonModal}
-                                onPress={() => {
-                                  useItem(index);
-                                  setShowModalPokemon(!showModalPokemon);
-                                }}
-                              >
-                                {index != numOurPokemon && (
-                                  <Text style={styles.textButton}>
-                                    {el.label} - {el.PV["current"]}/
-                                    {el.PV["max"]}PV
-                                  </Text>
-                                )}
-                                {index == numOurPokemon && (
-                                  <Text style={styles.textButton}>
-                                    {el.label}
-                                  </Text>
-                                )}
-                              </Pressable>
-                            );
-                          }
-                        }
-                        {
-                          /* Affichage pour utilisation item sur Pokemon Morts */
-                        }
-                        if (modalDisplayPokemonDead) {
-                          if (el.PV["current"] == 0) {
-                            return (
-                              <Pressable
-                                style={styles.buttonModal}
-                                onPress={() => {
-                                  useItem(index);
-                                  setShowModalPokemon(!showModalPokemon);
-                                }}
-                              >
-                                <Text style={styles.textButton}>
-                                  {el.label} - {el.PV["current"]}/{el.PV["max"]}
-                                  PV
-                                </Text>
-                              </Pressable>
-                            );
-                          }
-                        }
-                      })}
-                      {!hiddenButtonRetour && (
-                        <Pressable
-                          style={styles.buttonModal}
-                          onPress={() => {
-                            setShowModalPokemon(!showModalPokemon);
-                            setHiddenButtonOfMenu(() => false);
-                            setModalDisplayPokemonAlive(() => false);
-                            setModalDisplayPokemonDead(() => false);
-                            setModalDisplayForChange(() => false);
-                          }}
-                        >
-                          <Text style={styles.textButton}>RETOUR</Text>
-                        </Pressable>
-                      )}
-                    </View>
-                  </View>
-                </Modal>
               </View>
             </View>
 
@@ -621,6 +439,180 @@ export default function FightPVE({ navigation, route }) {
             </View>
           </View>
         </View>
+        {/* Modal pour les attaques */}
+        <Modal
+          animationType="slide"
+          visible={showModalAttack}
+          transparent={true}
+          onRequestClose={() => setShowModalAttack(!showModalAttack)}
+        >
+          <View style={styles.modalView}>
+            {ourMob[numOurPokemon].capacities.map((el) => {
+              return (
+                <Pressable
+                  style={styles.buttonModal}
+                  onPress={() => {
+                    attackByOur(el.name, el.power, el.type),
+                      setShowModalAttack(!showModalAttack);
+                  }}
+                >
+                  <Text style={styles.textButton}>{el.name}</Text>
+                </Pressable>
+              );
+            })}
+            <Pressable
+              style={styles.buttonModal}
+              onPress={() => {
+                setShowModalAttack(!showModalAttack);
+              }}
+            >
+              <Text style={styles.textButton}>RETOUR</Text>
+            </Pressable>
+          </View>
+        </Modal>
+
+        {/* Modal pour les objets */}
+        <Modal
+          animationType="slide"
+          visible={showModalBag}
+          transparent={true}
+          onRequestClose={() => setShowModalBag(!showModalBag)}
+        >
+          <View style={styles.modalView}>
+            {item.map((el, index) => {
+              return (
+                <Pressable
+                  style={styles.buttonModal}
+                  onPress={() => {
+                    setNameItem(el.name);
+                    setEffectItem(el.effect);
+                    setIndexItem(index);
+                    setNeedAlive(el.needAlive);
+                    el.needAlive
+                      ? setModalDisplayPokemonAlive(() => true)
+                      : setModalDisplayPokemonDead(() => true);
+                    setShowModalBag(!showModalBag);
+                    setShowModalPokemon(true);
+                  }}
+                >
+                  {el.needAlive && (
+                    <Text style={styles.textButton}>
+                      {el.name} (+{el.effect}PV) x{el.qty}
+                    </Text>
+                  )}
+                  {!el.needAlive && (
+                    <Text style={styles.textButton}>
+                      {el.name} ({el.effect}% PV MAX) x{el.qty}
+                    </Text>
+                  )}
+                </Pressable>
+              );
+            })}
+            <Pressable
+              style={styles.buttonModal}
+              onPress={() => {
+                setShowModalBag(!showModalBag);
+              }}
+            >
+              <Text style={styles.textButton}>RETOUR</Text>
+            </Pressable>
+          </View>
+        </Modal>
+
+        {/* Modal pour les Pokemon */}
+        <Modal
+          animationType="slide"
+          visible={showModalPokemon}
+          transparent={true}
+          onRequestClose={() => setShowModalPokemon(!showModalPokemon)}
+        >
+          <View style={styles.modalView}>
+            {ourMob.map((el, index) => {
+              {
+                /* Affichage pour le changement de Pokemon */
+              }
+              if (modalDisplayForChange) {
+                if (el.PV["current"] != 0 && index != numOurPokemon) {
+                  return (
+                    <Pressable
+                      style={styles.buttonModal}
+                      onPress={() => {
+                        changeOurPokemon(index);
+                        setShowModalPokemon(!showModalPokemon);
+                      }}
+                    >
+                      <Text style={styles.textButton}>
+                        {el.label} - {el.PV["current"]}/{el.PV["max"]}
+                        PV
+                      </Text>
+                    </Pressable>
+                  );
+                }
+              }
+              {
+                /* Affichage pour utilisation item sur Pokemon Vivants */
+              }
+              if (modalDisplayPokemonAlive) {
+                if (el.PV["current"] != 0) {
+                  return (
+                    <Pressable
+                      style={styles.buttonModal}
+                      onPress={() => {
+                        useItem(index);
+                        setShowModalPokemon(!showModalPokemon);
+                      }}
+                    >
+                      {index != numOurPokemon && (
+                        <Text style={styles.textButton}>
+                          {el.label} - {el.PV["current"]}/{el.PV["max"]}
+                          PV
+                        </Text>
+                      )}
+                      {index == numOurPokemon && (
+                        <Text style={styles.textButton}>{el.label}</Text>
+                      )}
+                    </Pressable>
+                  );
+                }
+              }
+              {
+                /* Affichage pour utilisation item sur Pokemon Morts */
+              }
+              if (modalDisplayPokemonDead) {
+                if (el.PV["current"] == 0) {
+                  return (
+                    <Pressable
+                      style={styles.buttonModal}
+                      onPress={() => {
+                        useItem(index);
+                        setShowModalPokemon(!showModalPokemon);
+                      }}
+                    >
+                      <Text style={styles.textButton}>
+                        {el.label} - {el.PV["current"]}/{el.PV["max"]}
+                        PV
+                      </Text>
+                    </Pressable>
+                  );
+                }
+              }
+            })}
+            {!hiddenButtonRetour && (
+              <Pressable
+                style={styles.buttonModal}
+                onPress={() => {
+                  setShowModalPokemon(!showModalPokemon);
+                  setHiddenButtonOfMenu(() => false);
+                  setModalDisplayPokemonAlive(() => false);
+                  setModalDisplayPokemonDead(() => false);
+                  setModalDisplayForChange(() => false);
+                }}
+              >
+                <Text style={styles.textButton}>RETOUR</Text>
+              </Pressable>
+            )}
+          </View>
+        </Modal>
       </ImageBackground>
     </View>
   );
@@ -637,30 +629,15 @@ const styles = new StyleSheet.create({
     resizeMode: "cover",
   },
 
-  // MODAL
-  modalView: {
-    height: 265,
-    width: 295,
-    justifyContent: "flex-start",
-    marginTop: 720,
-    margin: 10,
-    padding: 10,
-    backgroundColor: "#1F0F42",
-    borderRadius: 20,
+  // ECRAN DE JEU
+  viewTopPage: {
+    width: "100%",
+    height: "70%",
+    justifyContent: "center",
     alignItems: "center",
-    elevation: 5,
+    position: "relative",
   },
 
-  buttonModal: {
-    borderRadius: 5,
-    marginBottom: 7,
-    width: 280,
-    padding: 5,
-    elevation: 1,
-    backgroundColor: "#FFCC03",
-  },
-
-  // IMAGES
   imgTrainer: {
     width: "100%",
     height: 300,
@@ -688,20 +665,6 @@ const styles = new StyleSheet.create({
     left: -370,
   },
 
-  // TEXTBOX et TEXTE
-  textBox: {
-    position: "absolute",
-    width: "100%",
-  },
-
-  lineOfTextBox: {
-    marginLeft: 15,
-    textAlign: "justify",
-    fontFamily: "SHPinscher",
-    color: "#1F0F42",
-    fontSize: 18,
-  },
-
   advHealth: {
     position: "absolute",
     top: 9,
@@ -710,26 +673,6 @@ const styles = new StyleSheet.create({
     color: "#1F0F42",
   },
 
-  // BOUTTONS MENU
-  button: {
-    backgroundColor: "#FFCC03",
-    elevation: 1,
-    height: 35,
-    width: 120,
-    marginTop: 5,
-    borderRadius: 5,
-  },
-
-  textButton: {
-    textAlign: "center",
-    fontFamily: "SHPinscher",
-    color: "#1F0F42",
-    fontSize: 18,
-    padding: 3,
-  },
-
-  // HEALTHBAR
-
   advHealthBar: {
     position: "absolute",
     top: 15,
@@ -737,20 +680,7 @@ const styles = new StyleSheet.create({
     borderRadius: 5,
   },
 
-  viewTopPage: {
-    width: "100%",
-    height: "70%",
-    justifyContent: "center",
-    alignItems: "center",
-    position: "relative",
-  },
-
-  viewBottomPage: {
-    width: "100%",
-    height: "30%",
-    position: "relative",
-  },
-
+  // NOTRE HEALTHBAR
   viewOurHealthBar: {
     flexDirection: "row",
     width: "100%",
@@ -772,12 +702,58 @@ const styles = new StyleSheet.create({
     color: "#1F0F42",
   },
 
+  viewBottomPage: {
+    width: "100%",
+    height: "30%",
+    position: "relative",
+  },
+
+  // VUE TEXTES ET BOUTONS
+  viewTextAndButton: {
+    flexDirection: "row",
+    width: "100%",
+    height: "86%",
+    position: "relative",
+  },
+
+  // BOUTTONS MENU
+  button: {
+    backgroundColor: "#FFCC03",
+    elevation: 1,
+    height: 35,
+    width: 120,
+    marginTop: 5,
+    borderRadius: 5,
+  },
+
+  textButton: {
+    textAlign: "center",
+    fontFamily: "SHPinscher",
+    color: "#1F0F42",
+    fontSize: 18,
+    padding: 3,
+  },
+
+  // TEXTBOX et TEXTE
   viewText: {
     width: "66.5%",
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
+  },
+
+  textBox: {
+    position: "absolute",
+    width: "100%",
+  },
+
+  lineOfTextBox: {
+    marginLeft: 15,
+    textAlign: "justify",
+    fontFamily: "SHPinscher",
+    color: "#1F0F42",
+    fontSize: 18,
   },
 
   viewButton: {
@@ -787,10 +763,26 @@ const styles = new StyleSheet.create({
     position: "relative",
   },
 
-  viewTextAndButton: {
-    flexDirection: "row",
-    width: "100%",
-    height: "86%",
-    position: "relative",
+  // MODAL
+  modalView: {
+    height: 265,
+    width: 295,
+    marginTop: "156%",
+    bottom: 0,
+    margin: 10,
+    padding: 10,
+    backgroundColor: "#1F0F42",
+    borderRadius: 20,
+    alignItems: "center",
+    elevation: 5,
+  },
+
+  buttonModal: {
+    borderRadius: 5,
+    marginBottom: 7,
+    width: 280,
+    padding: 5,
+    elevation: 1,
+    backgroundColor: "#FFCC03",
   },
 });
