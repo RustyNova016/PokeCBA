@@ -4,12 +4,10 @@ import {Mob} from "./Mob";
 export class Team {
     /**
      *
-     * @param {DB_ID} idPlayer
      * @param {string} name
      * @param {Mob[]} mobs
      */
-    constructor(idPlayer, name, mobs) {
-        this.idPlayer = idPlayer;
+    constructor(name, mobs) {
         this.name = name;
         this.mobs = mobs;
     }
@@ -25,6 +23,6 @@ export class Team {
             mobsArray.push(Mob.fromJSON(mob));
         }
 
-        return new Team(json.idPlayer, json.name, mobsArray);
+        return new Team(json.name, mobsArray);
     }
 }

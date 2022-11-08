@@ -9,13 +9,15 @@ export function Debug_MobModel(props) {
     </View>;
 }
 
-const debugCardStyle = new StyleSheet.create({
+export const debugCardStyle = new StyleSheet.create({
     container: {
         display: "flex",
         backgroundColor: "#f8abb8",
         width: "auto",
         height: "auto",
         borderColor: "#000000",
-        borderStyle: "solid"
+        borderStyle: "solid",
+        margin: 5
     }
 })
+

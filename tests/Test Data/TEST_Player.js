@@ -11,7 +11,7 @@ const player1 = {
     gold: 463,
     img: [""],
     inventory: [],
-    teams: [TEST_Teams.Team1]
+    teams: [TEST_Teams.teamA]
 };
 
 export const TEST_Players = {

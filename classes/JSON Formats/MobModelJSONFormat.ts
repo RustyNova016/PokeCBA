@@ -1,5 +1,6 @@
 import {DB_ID, ElementTypeJSONFormat} from "./ElementTypeJSONFormat";
 import {AbilitiesJSONFormat} from "./AbilitiesJSONFormat";
+import {ImageURISource} from "react-native";
 
 export interface MobModelJSONFormat {
     idMobModel: DB_ID;
@@ -9,7 +10,7 @@ export interface MobModelJSONFormat {
     defense: number;
     speed: number;
     isShiny: boolean;
-    img: string[];
+    img: ImageURISource[];
     abilities: AbilitiesJSONFormat[];
     elementsType: DB_ID[];
 }
