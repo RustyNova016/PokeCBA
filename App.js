@@ -2,6 +2,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import FightPVE from "./vue/game/FightPVE";
 import Victory from "./vue/game/Victory";
+import Connexion from "./vue/login/Connexion";
+import ForgotPassword from "./vue/login/ForgotPassword";
+import Register from "./vue/login/Register";
 import Defeat from "./vue/game/Defeat";
 import { useFonts } from "expo-font";
 
@@ -19,6 +22,24 @@ export default function App() {
       {fontsLoaded && ( // On vérifie le chargement de la police avant affichage
         <Stack.Navigator initialRouteName="FightPVE">
           <Stack.Screen
+            name="Connexion"
+            component={Connexion}
+            options={{
+              headerShown: false,
+            }}
+          /><Stack.Screen
+            name="Register"
+            component={Register}
+            options={{
+              headerShown: false,
+            }}
+          /><Stack.Screen
+            name="ForgotPassword"
+            component={ForgotPassword}
+            options={{
+              headerShown: false,
+            }}
+          /><Stack.Screen
             name="FightPVE"
             component={FightPVE}
             options={{
