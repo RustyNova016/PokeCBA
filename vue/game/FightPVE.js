@@ -362,31 +362,40 @@ export default function FightPVE({ navigation, route }) {
       <View style={styles.viewTopPage}>
         <ImageBackground source={srcBackground} style={styles.imageBackGround}>
           {/* HealthBar Adverse + Affichage Pokemon + Vie Pokemon sauvage*/}
-          {showPokemonAdv && (
-            <Shake value={advAnimation} type="timing">
-              <HealthBar
-                styleHealthBar={styles.advHealthBar}
-                progressHealthBar={advHealth / advMaxHealth}
-                colorHealthBar={ColorHealthBar(advHealth / advMaxHealth)}
-                widthHealthBar={100}
-                heigthHealthBar={10}
-              />
-              <Image style={styles.imgAdvPokemon} source={srcAdvPokemon} />
-              <Text style={styles.advHealth}>
-                {advHealth} / {advMaxHealth}
-              </Text>
-            </Shake>
-          )}
-          {/* Gestion affichage Pokemon */}
-          {showOurPokemon && (
-            <Shake value={ourAnimation} type="timing">
-              <Image style={styles.imgOurPokemon} source={srcOurPokemon} />
-            </Shake>
-          )}
-          {/* Gestion affichage dresseur */}
-          <Modal animationType="slide" visible={showTrainer} transparent={true}>
-            <Image style={styles.imgTrainer} source={srcTrainer} />
-          </Modal>
+          <View style={styles.viewPokemon}>
+            <View style={styles.viewPokemonAdv}>
+              {showPokemonAdv && (
+                <Shake value={advAnimation} type="timing">
+                  <View style={styles.viewHealthBarAdv}>
+                    <HealthBar
+                      //styleHealthBar={styles.advHealthBar}
+                      progressHealthBar={advHealth / advMaxHealth}
+                      colorHealthBar={ColorHealthBar(advHealth / advMaxHealth)}
+                      widthHealthBar={100}
+                      heigthHealthBar={10}
+                    />
+                    <Text style={styles.advHealth}>
+                      {advHealth} / {advMaxHealth}
+                    </Text>
+                  </View>
+                  <View style={styles.viewImageAdv}>
+                    <Image
+                      style={styles.imgAdvPokemon}
+                      source={srcAdvPokemon}
+                    />
+                  </View>
+                </Shake>
+              )}
+            </View>
+            <View style={styles.viewOurPokemon}>
+              {/* Gestion affichage Pokemon */}
+              {showOurPokemon && (
+                <Shake value={ourAnimation} type="timing">
+                  <Image style={styles.imgOurPokemon} source={srcOurPokemon} />
+                </Shake>
+              )}
+            </View>
+          </View>
         </ImageBackground>
       </View>
       <View style={styles.viewBottomPage}>
@@ -416,7 +425,6 @@ export default function FightPVE({ navigation, route }) {
           </View>
 
           {/* Bouttons */}
-
           <View style={styles.viewButton}>
             <Pressable
               disabled={disabledButtonOfMenu}
@@ -445,6 +453,10 @@ export default function FightPVE({ navigation, route }) {
           </View>
         </View>
       </View>
+      {/* Modal affichage dresseur */}
+      <Modal animationType="slide" visible={showTrainer} transparent={true}>
+        <Image style={styles.imgTrainer} source={srcTrainer} />
+      </Modal>
       {/* Modal pour les attaques */}
       <Modal
         animationType="slide"
@@ -476,7 +488,6 @@ export default function FightPVE({ navigation, route }) {
           </Pressable>
         </View>
       </Modal>
-
       {/* Modal pour les objets */}
       <Modal
         animationType="slide"
@@ -625,6 +636,7 @@ export default function FightPVE({ navigation, route }) {
 
 const styles = new StyleSheet.create({
   // GENERAL
+
   container: {
     flex: 1,
     backgroundColor: "#1F0F42",
@@ -641,24 +653,33 @@ const styles = new StyleSheet.create({
   // ECRAN DE JEU
   viewTopPage: {
     height: "70%",
-    justifyContent: "center",
     alignItems: "center",
     position: "relative",
     margin: 5,
     borderRadius: 5,
   },
 
-  imgTrainer: {
-    height: 300,
-    resizeMode: "contain",
-    position: "absolute",
-    top: 372,
-    left: 70,
+  viewPokemon: {
+    flexDirection: "row-reverse",
+    height: "100%",
+    position: "relative",
   },
 
-  imgOurPokemon: {
-    height: 120,
-    resizeMode: "contain",
+  viewPokemonAdv: {
+    position: "relative",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    width: "50%",
+  },
+
+  viewHealthBarAdv: {
+    alignItems: "center",
+    marginBottom: "2%",
+  },
+
+  viewImageAdv: {
+    alignItems: "center",
+    marginBottom: "50%",
   },
 
   // POKEMON ADV
@@ -666,22 +687,33 @@ const styles = new StyleSheet.create({
     fontFamily: "SHPinscher",
     color: "#1F0F42",
     position: "absolute",
-    top: "100%",
-    left: "71%",
-  },
-
-  advHealthBar: {
-    position: "absolute",
-    top: "1870%",
-    left: "65%",
+    top: -6,
   },
 
   imgAdvPokemon: {
-    height: 200,
+    height: 120,
+    resizeMode: "contain",
+  },
+
+  viewOurPokemon: {
+    position: "relative",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    width: "50%",
+    marginBottom: "2%",
+  },
+
+  imgTrainer: {
+    height: 250,
     resizeMode: "contain",
     position: "absolute",
-    top: "1800%",
-    left: "20%",
+    marginTop: "83.5%",
+    left: 100,
+  },
+
+  imgOurPokemon: {
+    height: 120,
+    resizeMode: "contain",
   },
 
   // NOTRE HEALTHBAR
@@ -765,19 +797,19 @@ const styles = new StyleSheet.create({
 
   // MODAL
   modalView: {
-    height: "25%",
-    width: "66%",
-    marginTop: "160%",
     backgroundColor: "#FFCC03",
     borderRadius: 5,
     alignItems: "center",
     elevation: 1,
     margin: 5,
+    marginTop: "160.6%",
+    height: "24.5%",
+    width: "66.5%",
   },
 
   buttonModal: {
     borderRadius: 5,
-    margin: 2,
+    margin: 1.5,
     width: "100%",
     elevation: 1,
     backgroundColor: "#FFCC03",
