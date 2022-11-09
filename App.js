@@ -1,11 +1,11 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
-import FightPVE from "./vue/game/FightPVE";
-import Victory from "./vue/game/Victory";
+import FightPVE from "./vue/game/FightPVE/FightPVE";
+import Victory from "./vue/game/Victory/Victory";
 import Connexion from "./vue/login/Connexion";
 import ForgotPassword from "./vue/login/ForgotPassword";
 import Register from "./vue/login/Register";
-import Defeat from "./vue/game/Defeat";
+import Defeat from "./vue/game/Defeat/Defeat";
 import { useFonts } from "expo-font";
 
 const Stack = createNativeStackNavigator();

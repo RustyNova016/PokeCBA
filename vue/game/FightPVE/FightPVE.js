@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 
-import HealthBar from "../../components/HealthBar/HealthBar";
-import { CalculateDamage } from "../../tools/CalculateDamage.js";
-import { ColorHealthBar } from "../../tools/ColorHealthBar";
+import HealthBar from "../../../components/HealthBar/HealthBar";
+import { CalculateDamage } from "../../../tools/CalculateDamage.js";
+import { ColorHealthBar } from "../../../tools/ColorHealthBar";
 import { StyleSheet } from "react-native";
 import { Shake } from "react-native-motion";
 import { Dimensions } from "react-native";
 
-import { advMob } from "../../classes/advMob";
-import { ourMob } from "../../classes/ourMob";
-import { item } from "../../classes/item";
+import { advMob } from "../../../classes/advMob";
+import { ourMob } from "../../../classes/ourMob";
+import { item } from "../../../classes/item";
 
-import * as constClass from "../../Constants.js";
+import * as constClass from "../../../Constants.js";
+import { styles } from "./CSS.js";
 
 import {
   Text,
@@ -30,7 +31,7 @@ export default function FightPVE({ navigation, route }) {
   // VARIABLES POUR LES IMAGES
   const srcBackground = constClass.srcBackground;
   const [srcTrainer, setSrcTrainer] = useState(
-    require("../../images/trainer.png")
+    require("../../../images/trainer.png")
   );
 
   // AFFICHAGE DES IMAGES DE BASE
@@ -633,185 +634,3 @@ export default function FightPVE({ navigation, route }) {
     </View>
   );
 }
-
-const styles = new StyleSheet.create({
-  // GENERAL
-
-  container: {
-    flex: 1,
-    backgroundColor: "#1F0F42",
-  },
-
-  imageBackGround: {
-    flex: 1,
-    width: "100%",
-    resizeMode: "cover",
-    borderRadius: 5,
-    overflow: "hidden",
-  },
-
-  // ECRAN DE JEU
-  viewTopPage: {
-    height: "70%",
-    alignItems: "center",
-    position: "relative",
-    margin: 5,
-    borderRadius: 5,
-  },
-
-  viewPokemon: {
-    flexDirection: "row-reverse",
-    height: "100%",
-    position: "relative",
-  },
-
-  viewPokemonAdv: {
-    position: "relative",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    width: "50%",
-  },
-
-  viewHealthBarAdv: {
-    alignItems: "center",
-    marginBottom: "2%",
-  },
-
-  viewImageAdv: {
-    alignItems: "center",
-    marginBottom: "50%",
-  },
-
-  // POKEMON ADV
-  advHealth: {
-    fontFamily: "SHPinscher",
-    color: "#1F0F42",
-    position: "absolute",
-    top: -6,
-  },
-
-  imgAdvPokemon: {
-    height: 120,
-    resizeMode: "contain",
-  },
-
-  viewOurPokemon: {
-    position: "relative",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    width: "50%",
-    marginBottom: "2%",
-  },
-
-  imgTrainer: {
-    height: 250,
-    resizeMode: "contain",
-    position: "absolute",
-    marginTop: "83.5%",
-    left: 100,
-  },
-
-  imgOurPokemon: {
-    height: 120,
-    resizeMode: "contain",
-  },
-
-  // NOTRE HEALTHBAR
-  viewOurHealthBar: {
-    backgroundColor: "#FFCC03",
-    marginLeft: 5,
-    marginRight: 5,
-    flexDirection: "row",
-    height: "14%",
-    justifyContent: "space-evenly",
-    alignItems: "center",
-    position: "relative",
-    borderRadius: 5,
-  },
-
-  ourHealth: {
-    fontFamily: "SHPinscher",
-    fontSize: 15,
-    color: "#1F0F42",
-  },
-
-  viewBottomPage: {
-    width: "100%",
-    height: "30%",
-    position: "relative",
-  },
-
-  // VUE TEXTES ET BOUTONS
-  viewTextAndButton: {
-    backgroundColor: "#FFCC03",
-    margin: 5,
-    borderRadius: 5,
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    position: "relative",
-    height: "80%",
-  },
-
-  // TEXTBOX et TEXTE
-  viewText: {
-    elevation: 1,
-    borderRadius: 5,
-    backgroundColor: "#FFCC03",
-    width: "66.5%",
-    position: "relative",
-  },
-
-  lineOfTextBox: {
-    marginLeft: 5,
-    fontFamily: "SHPinscher",
-    color: "#1F0F42",
-    fontSize: 18,
-  },
-
-  // BOUTTONS MENU
-  viewButton: {
-    elevation: 1,
-    borderRadius: 5,
-    backgroundColor: "#FFCC03",
-    alignItems: "center",
-    position: "relative",
-    width: "30%",
-  },
-
-  button: {
-    backgroundColor: "#FFCC03",
-    elevation: 1,
-    height: 35,
-    width: "100%",
-    marginTop: 5,
-    borderRadius: 5,
-  },
-
-  textButton: {
-    textAlign: "center",
-    fontFamily: "SHPinscher",
-    color: "#1F0F42",
-    fontSize: 18,
-    padding: 3,
-  },
-
-  // MODAL
-  modalView: {
-    backgroundColor: "#FFCC03",
-    borderRadius: 5,
-    alignItems: "center",
-    elevation: 1,
-    margin: 5,
-    marginTop: "160.6%",
-    height: "24.5%",
-    width: "66.5%",
-  },
-
-  buttonModal: {
-    borderRadius: 5,
-    margin: 1.5,
-    width: "100%",
-    elevation: 1,
-    backgroundColor: "#FFCC03",
-  },
-});
