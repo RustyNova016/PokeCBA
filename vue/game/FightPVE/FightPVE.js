@@ -190,7 +190,7 @@ export default function FightPVE({ navigation, route }) {
   };
 
   // Fonction d'attaque par NOUS
-  const attackByOur = function (nameOurAttack, powerOurAttack, typeOurAttack) {
+  function attackByOur(nameOurAttack, powerOurAttack, typeOurAttack) {
     // Desactivation bouton Attaquer
     setHiddenButtonOfMenu(true);
 
@@ -220,10 +220,10 @@ export default function FightPVE({ navigation, route }) {
       setHiddenButtonOfMenu(true);
       advHealth - damage <= 0 ? victoryForUs() : attackByAdv();
     }, 300);
-  };
+  }
 
   // Fonction utilisation ITEM
-  const useItem = function (indexPokemon) {
+  function useItem(indexPokemon) {
     // On cache les boutons du Menu
     setHiddenButtonOfMenu(true);
 
@@ -274,10 +274,10 @@ export default function FightPVE({ navigation, route }) {
     setNeedAlive(false);
     setModalDisplayPokemonAlive(false);
     setModalDisplayPokemonDead(false);
-  };
+  }
 
   // Fonction changement de Pokemon
-  const changeOurPokemon = function (index) {
+  function changeOurPokemon(index) {
     // On met la variable de définition de la modal Pokemon sur true
     setModalDisplayForChange(true);
 
@@ -301,20 +301,20 @@ export default function FightPVE({ navigation, route }) {
 
     // On remet en undefined la variable ourName pour vérification au départ
     setOurName();
-  };
+  }
 
   // Fonction de MAJ de la TextBox
-  const updateTextBox = function (text) {
+  function updateTextBox(text) {
     textBox.unshift(text);
     if (textBox.length > 8) {
       textBox.length = 8;
     }
     // MAJ d'une variable inutile pour MAJ affichage
     setMajTextBox(Math.random());
-  };
+  }
 
   // Fonction VICTOIRE
-  const victoryForUs = function () {
+  function victoryForUs() {
     setAdvHealth(0);
     updateTextBox(`${advName} est KO, VICTOIRE`);
     setHiddenButtonOfMenu(true);
@@ -325,10 +325,10 @@ export default function FightPVE({ navigation, route }) {
       // VERS PAGE VICTOIRE
       navigation.navigate("Victory");
     }, 3000);
-  };
+  }
 
   // Fonction DEFAITE
-  const maybeDefeatForUs = function (test) {
+  function maybeDefeatForUs(test) {
     setOurHealth(0);
     setHiddenButtonOfMenu(true);
     setShowOurPokemon(false);
@@ -356,7 +356,7 @@ export default function FightPVE({ navigation, route }) {
         setShowModalPokemon(true);
       }, 2000);
     }
-  };
+  }
 
   return (
     <View style={styles.container}>
