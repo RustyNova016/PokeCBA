@@ -156,10 +156,15 @@ export const styles = new StyleSheet.create({
     borderRadius: 5,
     alignItems: "center",
     elevation: 1,
-    margin: 5,
-    marginTop: "160.6%",
-    height: "24.5%",
+    marginLeft: 5,
+    position: "absolute",
+    bottom: 0,
+    height: "24.85%",
     width: "66.5%",
+  },
+
+  scrollView: {
+    width: "100%",
   },
 
   buttonModal: {

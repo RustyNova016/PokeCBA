@@ -21,6 +21,7 @@ import {
   Image,
   Pressable,
   Modal,
+  ScrollView,
 } from "react-native";
 
 export default function FightPVE({ navigation, route }) {
@@ -306,9 +307,6 @@ export default function FightPVE({ navigation, route }) {
   // Fonction de MAJ de la TextBox
   function updateTextBox(text) {
     textBox.unshift(text);
-    if (textBox.length > 8) {
-      textBox.length = 8;
-    }
     // MAJ d'une variable inutile pour MAJ affichage
     setMajTextBox(Math.random());
   }
@@ -374,6 +372,7 @@ export default function FightPVE({ navigation, route }) {
                       colorHealthBar={ColorHealthBar(advHealth / advMaxHealth)}
                       widthHealthBar={100}
                       heigthHealthBar={10}
+                      unfilledColorHealthBar={"#FFCC03"}
                     />
                     <Text style={styles.advHealth}>
                       {advHealth} / {advMaxHealth}
@@ -408,6 +407,7 @@ export default function FightPVE({ navigation, route }) {
             colorHealthBar={ColorHealthBar(ourHealth / ourMaxHealth)}
             widthHealthBar={0.39 * windowHeight}
             heigthHealthBar={0.06 * windowWidth}
+            unfilledColorHealthBar={"#1F0F42"}
           />
           {/* Affichage Notre Vie */}
           <Text style={styles.ourHealth}>
@@ -419,9 +419,11 @@ export default function FightPVE({ navigation, route }) {
           <View style={styles.viewText}>
             {/* TextBox */}
             <View>
-              {textBox.map((ligne) => {
-                return <Text style={styles.lineOfTextBox}>● {ligne}</Text>;
-              })}
+              <ScrollView style={styles.scrollView}>
+                {textBox.map((ligne) => {
+                  return <Text style={styles.lineOfTextBox}>● {ligne}</Text>;
+                })}
+              </ScrollView>
             </View>
           </View>
 
@@ -461,32 +463,35 @@ export default function FightPVE({ navigation, route }) {
       {/* Modal pour les attaques */}
       <Modal
         animationType="slide"
+        bottom={0}
         visible={showModalAttack}
         transparent={true}
         onRequestClose={() => setShowModalAttack(!showModalAttack)}
       >
         <View style={styles.modalView}>
-          {ourMob[numOurPokemon].capacities.map((el) => {
-            return (
-              <Pressable
-                style={styles.buttonModal}
-                onPress={() => {
-                  attackByOur(el.name, el.power, el.type),
-                    setShowModalAttack(!showModalAttack);
-                }}
-              >
-                <Text style={styles.textButton}>{el.name}</Text>
-              </Pressable>
-            );
-          })}
-          <Pressable
-            style={styles.buttonModal}
-            onPress={() => {
-              setShowModalAttack(!showModalAttack);
-            }}
-          >
-            <Text style={styles.textButton}>RETOUR</Text>
-          </Pressable>
+          <ScrollView style={styles.scrollView}>
+            {ourMob[numOurPokemon].capacities.map((el) => {
+              return (
+                <Pressable
+                  style={styles.buttonModal}
+                  onPress={() => {
+                    attackByOur(el.name, el.power, el.type),
+                      setShowModalAttack(!showModalAttack);
+                  }}
+                >
+                  <Text style={styles.textButton}>{el.name}</Text>
+                </Pressable>
+              );
+            })}
+            <Pressable
+              style={styles.buttonModal}
+              onPress={() => {
+                setShowModalAttack(!showModalAttack);
+              }}
+            >
+              <Text style={styles.textButton}>RETOUR</Text>
+            </Pressable>
+          </ScrollView>
         </View>
       </Modal>
       {/* Modal pour les objets */}
@@ -497,43 +502,45 @@ export default function FightPVE({ navigation, route }) {
         onRequestClose={() => setShowModalBag(!showModalBag)}
       >
         <View style={styles.modalView}>
-          {item.map((el, index) => {
-            return (
-              <Pressable
-                style={styles.buttonModal}
-                onPress={() => {
-                  setNameItem(el.name);
-                  setEffectItem(el.effect);
-                  setIndexItem(index);
-                  setNeedAlive(el.needAlive);
-                  el.needAlive
-                    ? setModalDisplayPokemonAlive(() => true)
-                    : setModalDisplayPokemonDead(() => true);
-                  setShowModalBag(!showModalBag);
-                  setShowModalPokemon(true);
-                }}
-              >
-                {el.needAlive && (
-                  <Text style={styles.textButton}>
-                    {el.name} (+{el.effect}PV) x{el.qty}
-                  </Text>
-                )}
-                {!el.needAlive && (
-                  <Text style={styles.textButton}>
-                    {el.name} ({el.effect}% PV MAX) x{el.qty}
-                  </Text>
-                )}
-              </Pressable>
-            );
-          })}
-          <Pressable
-            style={styles.buttonModal}
-            onPress={() => {
-              setShowModalBag(!showModalBag);
-            }}
-          >
-            <Text style={styles.textButton}>RETOUR</Text>
-          </Pressable>
+          <ScrollView style={styles.scrollView}>
+            {item.map((el, index) => {
+              return (
+                <Pressable
+                  style={styles.buttonModal}
+                  onPress={() => {
+                    setNameItem(el.name);
+                    setEffectItem(el.effect);
+                    setIndexItem(index);
+                    setNeedAlive(el.needAlive);
+                    el.needAlive
+                      ? setModalDisplayPokemonAlive(() => true)
+                      : setModalDisplayPokemonDead(() => true);
+                    setShowModalBag(!showModalBag);
+                    setShowModalPokemon(true);
+                  }}
+                >
+                  {el.needAlive && (
+                    <Text style={styles.textButton}>
+                      {el.name} (+{el.effect}PV) x{el.qty}
+                    </Text>
+                  )}
+                  {!el.needAlive && (
+                    <Text style={styles.textButton}>
+                      {el.name} ({el.effect}% PV MAX) x{el.qty}
+                    </Text>
+                  )}
+                </Pressable>
+              );
+            })}
+            <Pressable
+              style={styles.buttonModal}
+              onPress={() => {
+                setShowModalBag(!showModalBag);
+              }}
+            >
+              <Text style={styles.textButton}>RETOUR</Text>
+            </Pressable>
+          </ScrollView>
         </View>
       </Modal>
 
@@ -545,90 +552,92 @@ export default function FightPVE({ navigation, route }) {
         onRequestClose={() => setShowModalPokemon(!showModalPokemon)}
       >
         <View style={styles.modalView}>
-          {ourMob.map((el, index) => {
-            {
-              /* Affichage pour le changement de Pokemon */
-            }
-            if (modalDisplayForChange) {
-              if (el.PV["current"] != 0 && index != numOurPokemon) {
-                return (
-                  <Pressable
-                    style={styles.buttonModal}
-                    onPress={() => {
-                      changeOurPokemon(index);
-                      setShowModalPokemon(!showModalPokemon);
-                    }}
-                  >
-                    <Text style={styles.textButton}>
-                      {el.label} - {el.PV["current"]}/{el.PV["max"]}
-                      PV
-                    </Text>
-                  </Pressable>
-                );
+          <ScrollView style={styles.scrollView}>
+            {ourMob.map((el, index) => {
+              {
+                /* Affichage pour le changement de Pokemon */
               }
-            }
-            {
-              /* Affichage pour utilisation item sur Pokemon Vivants */
-            }
-            if (modalDisplayPokemonAlive) {
-              if (el.PV["current"] != 0) {
-                return (
-                  <Pressable
-                    style={styles.buttonModal}
-                    onPress={() => {
-                      useItem(index);
-                      setShowModalPokemon(!showModalPokemon);
-                    }}
-                  >
-                    {index != numOurPokemon && (
+              if (modalDisplayForChange) {
+                if (el.PV["current"] != 0 && index != numOurPokemon) {
+                  return (
+                    <Pressable
+                      style={styles.buttonModal}
+                      onPress={() => {
+                        changeOurPokemon(index);
+                        setShowModalPokemon(!showModalPokemon);
+                      }}
+                    >
                       <Text style={styles.textButton}>
                         {el.label} - {el.PV["current"]}/{el.PV["max"]}
                         PV
                       </Text>
-                    )}
-                    {index == numOurPokemon && (
-                      <Text style={styles.textButton}>{el.label}</Text>
-                    )}
-                  </Pressable>
-                );
+                    </Pressable>
+                  );
+                }
               }
-            }
-            {
-              /* Affichage pour utilisation item sur Pokemon Morts */
-            }
-            if (modalDisplayPokemonDead) {
-              if (el.PV["current"] == 0) {
-                return (
-                  <Pressable
-                    style={styles.buttonModal}
-                    onPress={() => {
-                      useItem(index);
-                      setShowModalPokemon(!showModalPokemon);
-                    }}
-                  >
-                    <Text style={styles.textButton}>
-                      {el.label} - {el.PV["current"]}/{el.PV["max"]}
-                      PV
-                    </Text>
-                  </Pressable>
-                );
+              {
+                /* Affichage pour utilisation item sur Pokemon Vivants */
               }
-            }
-          })}
-          {!hiddenButtonRetour && (
-            <Pressable
-              style={styles.buttonModal}
-              onPress={() => {
-                setShowModalPokemon(!showModalPokemon);
-                setHiddenButtonOfMenu(() => false);
-                setModalDisplayPokemonAlive(() => false);
-                setModalDisplayPokemonDead(() => false);
-                setModalDisplayForChange(() => false);
-              }}
-            >
-              <Text style={styles.textButton}>RETOUR</Text>
-            </Pressable>
-          )}
+              if (modalDisplayPokemonAlive) {
+                if (el.PV["current"] != 0) {
+                  return (
+                    <Pressable
+                      style={styles.buttonModal}
+                      onPress={() => {
+                        useItem(index);
+                        setShowModalPokemon(!showModalPokemon);
+                      }}
+                    >
+                      {index != numOurPokemon && (
+                        <Text style={styles.textButton}>
+                          {el.label} - {el.PV["current"]}/{el.PV["max"]}
+                          PV
+                        </Text>
+                      )}
+                      {index == numOurPokemon && (
+                        <Text style={styles.textButton}>{el.label}</Text>
+                      )}
+                    </Pressable>
+                  );
+                }
+              }
+              {
+                /* Affichage pour utilisation item sur Pokemon Morts */
+              }
+              if (modalDisplayPokemonDead) {
+                if (el.PV["current"] == 0) {
+                  return (
+                    <Pressable
+                      style={styles.buttonModal}
+                      onPress={() => {
+                        useItem(index);
+                        setShowModalPokemon(!showModalPokemon);
+                      }}
+                    >
+                      <Text style={styles.textButton}>
+                        {el.label} - {el.PV["current"]}/{el.PV["max"]}
+                        PV
+                      </Text>
+                    </Pressable>
+                  );
+                }
+              }
+            })}
+            {!hiddenButtonRetour && (
+              <Pressable
+                style={styles.buttonModal}
+                onPress={() => {
+                  setShowModalPokemon(!showModalPokemon);
+                  setHiddenButtonOfMenu(() => false);
+                  setModalDisplayPokemonAlive(() => false);
+                  setModalDisplayPokemonDead(() => false);
+                  setModalDisplayForChange(() => false);
+                }}
+              >
+                <Text style={styles.textButton}>RETOUR</Text>
+              </Pressable>
+            )}
+          </ScrollView>
         </View>
       </Modal>
     </View>
