@@ -5,7 +5,8 @@ import { CalculateDamage } from "../../../tools/CalculateDamage.js";
 import { ColorHealthBar } from "../../../tools/ColorHealthBar";
 import { StyleSheet } from "react-native";
 import { Shake } from "react-native-motion";
-import { Dimensions } from "react-native";
+import { Dimensions, Vibration } from "react-native";
+import { Audio } from "expo-av";
 
 import { advMob } from "../../../classes/advMob";
 import { ourMob } from "../../../classes/ourMob";
@@ -22,6 +23,7 @@ import {
   Pressable,
   Modal,
   ScrollView,
+  Button,
 } from "react-native";
 
 export default function FightPVE({ navigation, route }) {
@@ -106,6 +108,32 @@ export default function FightPVE({ navigation, route }) {
     useState(false);
   const [modalDisplayPokemonDead, setModalDisplayPokemonDead] = useState(false);
 
+  const [soundBackGround, setSoundBackGround] = useState();
+  const [soundAttack, setSoundAttack] = useState();
+
+  useEffect(() => {
+    playSoundBackGround();
+    setInterval(function () {
+      playSoundBackGround();
+    }, 80000);
+  }, []);
+
+  async function playSoundBackGround() {
+    const { sound: soundBackGround } = await Audio.Sound.createAsync(
+      require("../../../sounds/Battle.mp3")
+    );
+    setSoundBackGround(soundBackGround);
+    await soundBackGround.playAsync();
+  }
+
+  async function playSoundAttack() {
+    const { sound : soundAttack } = await Audio.Sound.createAsync(
+      require("../../../sounds/Cut.mp3")
+    );
+    setSoundAttack(soundAttack);
+    await soundAttack.playAsync();
+  }
+
   useEffect(() => {
     // ON INITIALISE LES VARIABLES DE NOTRE POKEMON
     setOurHealth(ourMob[numOurPokemon].PV["current"]);
@@ -177,12 +205,16 @@ export default function FightPVE({ navigation, route }) {
     setTimeout(() => {
       ourHealth + effectItem - damage > 0
         ? (setAdvAnimation(advAnimation + 1),
+          playSoundAttack(),
+          Vibration.vibrate(2),
           setTimeout(() => {
             setOurHealth((ourHealth) => ourHealth - damage);
             updateTextBox(text);
             setHiddenButtonOfMenu(false);
           }, 300))
         : (setAdvAnimation(advAnimation + 1),
+          playSoundAttack(),
+          Vibration.vibrate(2),
           setTimeout(() => {
             updateTextBox(text);
             maybeDefeatForUs();
@@ -214,6 +246,8 @@ export default function FightPVE({ navigation, route }) {
 
     // On réaffecte les différentes variables
     setOurAnimation(ourAnimation + 1);
+    Vibration.vibrate(2);
+    playSoundAttack();
 
     setTimeout(() => {
       setAdvHealth((advHealth) => advHealth - damage);
@@ -627,6 +661,9 @@ export default function FightPVE({ navigation, route }) {
               <Pressable
                 style={styles.buttonModal}
                 onPress={() => {
+                  {
+                    playSoundBackGround;
+                  }
                   setShowModalPokemon(!showModalPokemon);
                   setHiddenButtonOfMenu(() => false);
                   setModalDisplayPokemonAlive(() => false);
