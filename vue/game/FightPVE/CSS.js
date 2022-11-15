@@ -8,7 +8,7 @@ export const styles = new StyleSheet.create({
     backgroundColor: DarkBlueBackground,
     alignItems: "center",
     justifyContent: "center",
-    paddingBottom: 10
+    paddingBottom: 52
   },
 
   // ECRAN DE JEU AVEC IMG POKEMON

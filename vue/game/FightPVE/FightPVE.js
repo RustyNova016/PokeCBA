@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import HealthBar from "../../../components/HealthBar/HealthBar";
 import { CalculateDamage } from "../../../tools/CalculateDamage.js";
 import { ColorHealthBar } from "../../../tools/ColorHealthBar";
-import {StatusBar, StyleSheet} from "react-native";
 import { Shake } from "react-native-motion";
 import { Dimensions, Vibration } from "react-native";
 import { Audio } from "expo-av";
@@ -392,12 +391,6 @@ export default function FightPVE({ navigation, route }) {
 
   return (
       <>
-        {/*Deal with status bar (https://reactnative.dev/docs/statusbar) */}
-        <StatusBar animated={true} barStyle={"#FFFFFF"} backgroundColor={DarkBlueBackground}/>
-
-
-
-
     <View style={styles.container}>
       <View style={styles.viewTopPage}>
         <ImageBackground source={srcBackground} style={styles.imageBackGround}>
