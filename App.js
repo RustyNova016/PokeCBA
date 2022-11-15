@@ -7,6 +7,7 @@ import ForgotPassword from "./vue/login/ForgotPassword";
 import Register from "./vue/login/Register";
 import Defeat from "./vue/game/Defeat/Defeat";
 import { useFonts } from "expo-font";
+import {DarkBlueBackground} from "./vue/game/FightPVE/CSS";
 
 const Stack = createNativeStackNavigator();
 
@@ -44,6 +45,11 @@ export default function App() {
             component={FightPVE}
             options={{
               headerShown: false,
+
+              statusBarColor: DarkBlueBackground,
+
+              navigationBarHidden: false,
+              navigationBarColor: DarkBlueBackground
             }}
           />
           <Stack.Screen
