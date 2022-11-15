@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import HealthBar from "../../../components/HealthBar/HealthBar";
 import { CalculateDamage } from "../../../tools/CalculateDamage.js";
 import { ColorHealthBar } from "../../../tools/ColorHealthBar";
-import { StyleSheet } from "react-native";
+import {StatusBar, StyleSheet} from "react-native";
 import { Shake } from "react-native-motion";
 import { Dimensions, Vibration } from "react-native";
 import { Audio } from "expo-av";
@@ -13,7 +13,7 @@ import { ourMob } from "../../../classes/ourMob";
 import { item } from "../../../classes/item";
 
 import * as constClass from "../../../Constants.js";
-import { styles } from "./CSS.js";
+import {DarkBlueBackground, styles} from "./CSS.js";
 
 import {
   Text,
@@ -391,6 +391,13 @@ export default function FightPVE({ navigation, route }) {
   }
 
   return (
+      <>
+        {/*Deal with status bar (https://reactnative.dev/docs/statusbar) */}
+        <StatusBar animated={true} barStyle={"#FFFFFF"} backgroundColor={DarkBlueBackground}/>
+
+
+
+
     <View style={styles.container}>
       <View style={styles.viewTopPage}>
         <ImageBackground source={srcBackground} style={styles.imageBackGround}>
@@ -678,5 +685,6 @@ export default function FightPVE({ navigation, route }) {
         </View>
       </Modal>
     </View>
+    </>
   );
 }
