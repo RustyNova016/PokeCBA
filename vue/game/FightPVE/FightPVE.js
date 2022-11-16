@@ -127,7 +127,7 @@ export default function FightPVE({ navigation, route }) {
   }
 
   async function playSoundAttack() {
-    const { sound : soundAttack } = await Audio.Sound.createAsync(
+    const { sound: soundAttack } = await Audio.Sound.createAsync(
       require("../../../sounds/Cut.mp3")
     );
     setSoundAttack(soundAttack);
@@ -209,6 +209,7 @@ export default function FightPVE({ navigation, route }) {
           Vibration.vibrate(2),
           setTimeout(() => {
             setOurHealth((ourHealth) => ourHealth - damage);
+            ourMob[numOurPokemon].PV["current"] = ourHealth - damage;
             updateTextBox(text);
             setHiddenButtonOfMenu(false);
           }, 300))
@@ -248,7 +249,6 @@ export default function FightPVE({ navigation, route }) {
     setOurAnimation(ourAnimation + 1);
     Vibration.vibrate(2);
     playSoundAttack();
-
     setTimeout(() => {
       setAdvHealth((advHealth) => advHealth - damage);
       updateTextBox(text);
@@ -613,7 +613,7 @@ export default function FightPVE({ navigation, route }) {
                 /* Affichage pour utilisation item sur Pokemon Vivants */
               }
               if (modalDisplayPokemonAlive) {
-                if (el.PV["current"] != 0) {
+                if (el.PV["current"] != 0 && el.PV["current"] != el.PV["max"]) {
                   return (
                     <Pressable
                       style={styles.buttonModal}
