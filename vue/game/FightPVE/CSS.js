@@ -1,12 +1,14 @@
 import { StyleSheet } from "react-native";
 
+export const DarkBlueBackground = "#1F0F42";
 export const styles = new StyleSheet.create({
   // GENERAL
 
   container: {
-    backgroundColor: "#1F0F42",
+    backgroundColor: DarkBlueBackground,
     alignItems: "center",
     justifyContent: "center",
+    paddingBottom: 52
   },
 
   // ECRAN DE JEU AVEC IMG POKEMON
@@ -64,7 +66,7 @@ export const styles = new StyleSheet.create({
 
   advHealth: {
     fontFamily: "SHPinscher",
-    color: "#1F0F42",
+    color: DarkBlueBackground,
     position: "absolute",
     top: -6,
   },
@@ -90,7 +92,7 @@ export const styles = new StyleSheet.create({
   ourHealth: {
     fontFamily: "SHPinscher",
     fontSize: 15,
-    color: "#1F0F42",
+    color: DarkBlueBackground,
   },
 
   // VUE TEXTES ET BOUTONS
@@ -114,7 +116,7 @@ export const styles = new StyleSheet.create({
   lineOfTextBox: {
     marginLeft: 5,
     fontFamily: "SHPinscher",
-    color: "#1F0F42",
+    color: DarkBlueBackground,
     fontSize: 18,
   },
 
@@ -137,7 +139,7 @@ export const styles = new StyleSheet.create({
   textButton: {
     textAlign: "center",
     fontFamily: "SHPinscher",
-    color: "#1F0F42",
+    color: DarkBlueBackground,
     fontSize: 18,
     padding: 3,
   },
